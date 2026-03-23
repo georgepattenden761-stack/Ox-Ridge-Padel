@@ -698,7 +698,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="513c303f30363423113e2923383536347f323e3c">[email&#160;protected]</a></p>
+  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f19c909f90969483b19e898398959694df929e9c">[email&#160;protected]</a></p>
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -722,18 +722,26 @@
   function selectOption(el, groupId, showConditional) {
     document.querySelectorAll('#' + groupId + ' .option-item').forEach(item => item.classList.remove('selected'));
     el.classList.add('selected');
-    el.querySelector('input').checked = true;
+    const input = el.querySelector('input');
+    if (input) input.checked = true;
     // Handle conditional input for Q10
     if (groupId === 'q10') {
       const cond = document.getElementById('q10conditional');
-      if (showConditional) {
+      if (showConditional === true) {
         cond.classList.add('visible');
       } else {
         cond.classList.remove('visible');
         document.getElementById('q10text').value = '';
       }
     }
-    hideError(groupId.replace('q', 'err'));
+    const errId = 'err' + groupId.replace('q', '');
+    hideError(errId);
+    // Auto-advance for radio questions (not q10 with conditional)
+    const autoSteps = [3,4,5,6,7,8,9,11,12];
+    const stepNum = parseInt(groupId.replace('q',''));
+    if (autoSteps.includes(stepNum)) {
+      setTimeout(() => next(stepNum), 300);
+    }
   }
 
   function hideError(id) {
@@ -792,8 +800,12 @@
       membership:   document.querySelector('input[name="q12"]:checked')?.value,
     };
 
-    console.log('Form submission:', data);
-    // ↑ Replace this with your backend/email service integration
+    // Send to Formspree - replace YOUR_FORM_ID with your Formspree form ID
+    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(err => console.log('Submission error:', err));
 
     // Show progress as complete
     document.getElementById('progressFill').style.width = '100%';
