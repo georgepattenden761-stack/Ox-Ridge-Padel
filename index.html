@@ -621,6 +621,9 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
+    .hero { padding-top: 120px; }
+    .nav-logo-full { display: none; }
+    .nav-logo-short { display: inline; }
     .pillars-grid,
     .membership-cards {
       grid-template-columns: 1fr;
@@ -649,6 +652,7 @@
     font-size: 28px;
     color: var(--cream);
   }
+  .nav-logo-short { display: none; }
 
   .nav-links {
     display: flex;
@@ -687,7 +691,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Ox Ridge Padel</div>
+  <div class="nav-logo"><span class="nav-logo-full">Ox Ridge Padel</span><span class="nav-logo-short">ORP</span></div>
   <ul class="nav-links">
     <li><a href="#memberships">Memberships</a></li>
     <li><a href="#waitlist">Join</a></li>
@@ -700,7 +704,9 @@
   <div class="hero-bg-overlay"></div>
   <div class="court-lines"></div>
 
-  <p class="presents">Ox Ridge Riding &amp; Racquet Club · Presents</p>
+  <p class="presents">Ox Ridge Riding &amp; Racquet Club</p>
+
+  <p class="presents" style="margin-bottom:8px;margin-top:-16px;font-size:9px;opacity:0.6">Presents</p>
 
   <h1 class="hero-logo">Ox Ridge Padel</h1>
 
@@ -711,7 +717,7 @@
   <p class="hero-tagline">A New Summer Ritual Begins</p>
 
   <div class="hero-cta">
-    <a href="#waitlist" class="btn-primary">Request Access</a>
+    <a href="#waitlist" class="btn-primary">Join the Season</a>
   </div>
 
 
@@ -726,9 +732,9 @@
   </h2>
 
   <div class="intro-body reveal">
-    <p>This summer, padel arrives at Ox Ridge. Not as just another sport, but as a new social ritual for the Darien community.</p>
+    <p>This summer, padel arrives at Ox Ridge. Not as just another sport, but as a new social ritual for the Darien and surrounding communities.</p>
     <p>Designed as a highly curated, limited-time three-court and lounge pop-up — where competition is real, but never intimidating. Where you come for a match, and stay for the people.</p>
-    <p>Inspired by the best clubs, we've built this experience around a single idea: <strong style="color:var(--cream);font-weight:400">belonging.</strong></p>
+    <p>Inspired by the best clubs, we've built this experience around a single idea: <strong style="color:var(--cream);font-weight:400">a curated community of players and experiences.</strong></p>
   </div>
 </section>
 
@@ -743,8 +749,8 @@
     <div class="pillars-grid">
       <div class="pillar reveal">
         <div class="pillar-number">01</div>
-        <div class="pillar-title">Curated & Limited</div>
-        <p class="pillar-text">Strictly limited access across all tiers to preserve a premium, intimate atmosphere. This is not a mass offering.</p>
+        <div class="pillar-title">A Founding Season</div>
+        <p class="pillar-text">This is a first season. A founding group. A moment to be part of something from the very beginning.</p>
       </div>
       <div class="pillar reveal">
         <div class="pillar-number">02</div>
@@ -753,8 +759,8 @@
       </div>
       <div class="pillar reveal">
         <div class="pillar-number">03</div>
-        <div class="pillar-title">A Founding Season</div>
-        <p class="pillar-text">This is a first season. A founding group. A moment to be part of something from the very beginning.</p>
+        <div class="pillar-title">Curated &amp; Limited</div>
+        <p class="pillar-text">Strictly limited access across all tiers to preserve a premium, intimate atmosphere. This is not a mass offering.</p>
       </div>
     </div>
   </div>
@@ -774,13 +780,14 @@
       <span class="card-badge">The Ambassador</span>
       <h3 class="card-title">Ambassador<br>Membership</h3>
       <p class="card-subtitle">For the leaders, hosts, and matchmakers of Darien.</p>
+      <p style="font-size:10px;color:var(--gold);letter-spacing:0.05em;margin-bottom:16px;font-style:italic;">Limited availability — invitations by the Padel Committee</p>
       <div class="card-divider"></div>
       <ul class="card-perks">
-        <li>Unlimited court time &amp; reservations all summer</li>
+        <li>Unlimited court time &amp; reservations all summer *</li>
         <li>Unlimited advanced booking — full season priority</li>
         <li>Private 1:1 pre-season level assessment</li>
         <li>Preferred rates: lessons ($140) &amp; clinics ($45)</li>
-        <li>5 premium guest passes for the season</li>
+        <li>5 premium guest passes per month **</li>
         <li>Priority access to Friday Night Mixers &amp; Season Finale</li>
       </ul>
       <div class="card-pricing">
@@ -802,6 +809,7 @@
         <li>14-day rolling booking window for the full season</li>
         <li>Preferred member rates on court, lessons &amp; clinics</li>
         <li>Complimentary group level assessment</li>
+        <li>5 guest passes for the season **</li>
         <li>Access reserved for members &amp; invited guests</li>
         <li>Full access to the social calendar &amp; community mixers</li>
       </ul>
@@ -819,21 +827,28 @@
     <div class="card reveal">
       <span class="card-badge">The Discovery</span>
       <h3 class="card-title">Discovery<br>Pass</h3>
-      <p class="card-subtitle">Flexible, pay-as-you-play for those curious to discover padel.</p>
+      <p class="card-subtitle">Flexible access for those curious to discover padel.</p>
       <div class="card-divider"></div>
       <ul class="card-perks">
-        <li>Pay-as-you-play court access — up to 3 visits per season</li>
+        <li>First 20 sign-ups receive a complimentary one-hour lesson</li>
+        <li>Prepaid access for up to 3 visits per season</li>
         <li>48-hour advance booking window</li>
         <li>Access to lessons ($180) &amp; clinics ($65)</li>
         <li>Select event access</li>
       </ul>
       <div class="card-pricing">
-        <span class="price-label">Guest Court Fees</span>
+        <span class="price-label">Guest court fees apply thereafter **</span>
         <div class="price-row"><span>Off-peak</span><span>$50 / session</span></div>
         <div class="price-row"><span>Peak</span><span>$70 / session</span></div>
       </div>
     </div>
 
+  </div>
+  <div style="max-width:1100px;margin:32px auto 0;padding:0 24px 0;">
+    <p style="font-size:10px;color:var(--cream-dim);opacity:0.5;line-height:2;">
+      * Up to 3 active bookings at any given time<br>
+      ** Guests limited to 3 visits per season (not cumulative across tiers)
+    </p>
   </div>
 </section>
 
@@ -842,7 +857,7 @@
   <div class="waitlist-inner">
     <span class="section-label reveal">Join the Season</span>
     <h2 class="waitlist-heading reveal">Secure Your Place<br>on the Courts</h2>
-    <p class="waitlist-sub reveal">Enter your email to begin your membership application. We'll send you a short form to match you with the right tier and get you on court this summer.</p>
+    <p class="waitlist-sub reveal">Enter your email to begin your membership application. Early registrants will receive priority access and invitations. We can't wait to welcome you on the courts this summer.</p>
 
     <div class="reveal">
       <div class="form-row">
@@ -852,9 +867,6 @@
       <p class="form-note">By submitting, you'll be directed to our membership questionnaire.</p>
     </div>
 
-    <div class="founding-note reveal">
-      <p>"Early registrants will receive priority access and invitations to our founding group. We can't wait to welcome you on the courts this summer."</p>
-    </div>
   </div>
 </section>
 
