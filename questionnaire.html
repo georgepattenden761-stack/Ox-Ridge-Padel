@@ -422,6 +422,9 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Initialise EmailJS
+  emailjs.init('2cCC03UlIgYSyJofG');
+
   var current = 1;
   var total = 12;
   var answers = {};
@@ -484,9 +487,6 @@
   function goBack(qNum) {
     if (qNum > 1) showQuestion(qNum - 1);
   }
-
-  // Initialise EmailJS
-  emailjs.init('2cCC03UlIgYSyJofG');
 
   function submitForm() {
     if (!answers['q12']) {
