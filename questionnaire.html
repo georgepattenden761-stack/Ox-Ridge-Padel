@@ -514,10 +514,26 @@
     };
 
     // Send to FormSubmit (delivers to info@oxridgepadel.com)
-    fetch('https://formsubmit.co/ajax/info@oxridgepadel.com', {
+    var formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('played_before', data.played_before);
+    formData.append('level', data.level);
+    formData.append('looking_for', data.looking_for);
+    formData.append('frequency', data.frequency);
+    formData.append('weekday_time', data.weekday_time);
+    formData.append('weekend_time', data.weekend_time);
+    formData.append('ox_member', data.ox_member);
+    formData.append('other_club', data.other_club);
+    formData.append('other_club_name', data.other_club_name);
+    formData.append('family', data.family);
+    formData.append('membership', data.membership);
+    formData.append('_subject', 'New Ox Ridge Padel Application - ' + data.name);
+    formData.append('_captcha', 'false');
+
+    fetch('https://formsubmit.co/info@oxridgepadel.com', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
+      body: formData
     }).then(function(res) {
       console.log('FormSubmit sent');
     }).catch(function(err) {
