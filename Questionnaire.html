@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ox Ridge Padel — Membership Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a3528;
+    --forest-deep: #0f2219;
+    --forest-mid: #224535;
+    --cream: #f0ead8;
+    --cream-dim: #c8bc9e;
+    --gold: #c9a84c;
+    --gold-light: #e2c97e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: var(--forest-deep);
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+  nav {
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .nav-logo {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 28px;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .nav-back {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    text-decoration: none;
+  }
+  .page-header {
+    text-align: center;
+    padding: 50px 24px 30px;
+  }
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+  .page-subtitle {
+    font-size: 12px;
+    color: var(--cream-dim);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .progress-wrap {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0 24px;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-dim); opacity: 0.6; }
+  .progress-count { font-size: 9px; letter-spacing: 0.3em; color: var(--gold); }
+  .progress-bar { height: 1px; background: rgba(255,255,255,0.08); }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; width: 0%; }
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 24px 80px;
+  }
+  .question-block { display: none; }
+  .question-block.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    font-size: 9px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .q-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3.5vw, 30px);
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 30px;
+    line-height: 1.4;
+  }
+  .text-input {
+    width: 100%;
+    padding: 16px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    color: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    caret-color: var(--gold);
+  }
+  .text-input::placeholder { color: rgba(200,188,158,0.3); }
+  .text-input:focus { border-bottom-color: var(--gold); }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    padding: 16px 20px;
+    border: 1px solid rgba(201,168,76,0.15);
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+  }
+  .opt:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.04); }
+  .opt.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .opt-circle {
+    width: 16px; height: 16px;
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .opt.selected .opt-circle { border-color: var(--gold); background: var(--gold); }
+  .opt.selected .opt-circle::after {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--forest-deep);
+  }
+  .opt-text { font-size: 13px; color: var(--cream-dim); transition: color 0.2s; }
+  .opt.selected .opt-text { color: var(--cream); }
+  .conditional { display: none; margin-top: 10px; }
+  .conditional.show { display: block; }
+  .error-msg { font-size: 11px; color: #e07070; margin-top: 12px; display: none; }
+  .error-msg.show { display: block; }
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+  }
+  .btn-continue {
+    padding: 15px 44px;
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    color: var(--forest-deep);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: auto;
+  }
+  .btn-continue:hover { background: transparent; color: var(--gold); }
+  .btn-back {
+    padding: 15px 0;
+    background: transparent;
+    border: none;
+    color: var(--cream-dim);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .btn-back:hover { color: var(--gold); }
+  .thankyou { display: none; text-align: center; padding: 60px 24px; max-width: 560px; margin: 0 auto; }
+  .thankyou.show { display: block; animation: fadeIn 0.6s ease; }
+  .ty-icon { font-family: 'Pinyon Script', cursive; font-size: 72px; color: var(--gold); margin-bottom: 24px; }
+  .ty-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 4vw, 40px); font-weight: 300; color: var(--cream); margin-bottom: 16px; }
+  .ty-body { font-size: 13px; color: var(--cream-dim); line-height: 2; margin-bottom: 36px; }
+  .ty-note { padding: 24px 28px; border: 1px solid rgba(201,168,76,0.2); font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--cream-dim); line-height: 1.7; }
+  footer { padding: 36px 24px; text-align: center; border-top: 1px solid rgba(201,168,76,0.1); margin-top: 40px; }
+  footer p { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cream-dim); opacity: 0.4; }
+  @media (max-width: 600px) {
+    nav { padding: 20px 16px; }
+    .form-container { padding: 20px 16px 60px; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Ox Ridge Padel</a>
+  <a href="index.html" class="nav-back">Back</a>
+</nav>
+
+<div class="page-header">
+  <span class="section-label">Membership Application</span>
+  <h1 class="page-title">Tell Us About Yourself</h1>
+  <p class="page-subtitle">A few quick questions so we can match you with the right membership.</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="progress-label">Progress</span>
+    <span class="progress-count" id="prog-count">Question 1 of 12</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="form-container">
+
+  <div class="question-block active" id="q-1">
+    <span class="q-number">01 / 12</span>
+    <p class="q-label">What is your full name?</p>
+    <input class="text-input" type="text" id="ans-1" placeholder="Your full name" autocomplete="name">
+    <p class="error-msg" id="err-1">Please enter your full name.</p>
+    <div class="btn-row">
+      <button class="btn-back" style="visibility:hidden">Back</button>
+      <button class="btn-continue" onclick="goNext(1)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-2">
+    <span class="q-number">02 / 12</span>
+    <p class="q-label">What is your email address?</p>
+    <input class="text-input" type="email" id="ans-2" placeholder="you@example.com" autocomplete="email">
+    <p class="error-msg" id="err-2">Please enter a valid email address.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(2)">Back</button>
+      <button class="btn-continue" onclick="goNext(2)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-3">
+    <span class="q-number">03 / 12</span>
+    <p class="q-label">Have you played padel before?</p>
+    <div class="options" id="opts-3">
+      <div class="opt" onclick="pickOpt(this,3)"><div class="opt-circle"></div><span class="opt-text">Yes</span></div>
+      <div class="opt" onclick="pickOpt(this,3)"><div class="opt-circle"></div><span class="opt-text">No</span></div>
+    </div>
+    <p class="error-msg" id="err-3">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(3)">Back</button>
+      <button class="btn-continue" onclick="goNext(3)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-4">
+    <span class="q-number">04 / 12</span>
+    <p class="q-label">How would you describe your level?</p>
+    <div class="options" id="opts-4">
+      <div class="opt" onclick="pickOpt(this,4)"><div class="opt-circle"></div><span class="opt-text">Never played</span></div>
+      <div class="opt" onclick="pickOpt(this,4)"><div class="opt-circle"></div><span class="opt-text">Beginner</span></div>
+      <div class="opt" onclick="pickOpt(this,4)"><div class="opt-circle"></div><span class="opt-text">Intermediate</span></div>
+      <div class="opt" onclick="pickOpt(this,4)"><div class="opt-circle"></div><span class="opt-text">Advanced / Competitive</span></div>
+    </div>
+    <p class="error-msg" id="err-4">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(4)">Back</button>
+      <button class="btn-continue" onclick="goNext(4)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-5">
+    <span class="q-number">05 / 12</span>
+    <p class="q-label">What are you primarily looking for?</p>
+    <div class="options" id="opts-5">
+      <div class="opt" onclick="pickOpt(this,5)"><div class="opt-circle"></div><span class="opt-text">Competitive play</span></div>
+      <div class="opt" onclick="pickOpt(this,5)"><div class="opt-circle"></div><span class="opt-text">Regular weekly games</span></div>
+      <div class="opt" onclick="pickOpt(this,5)"><div class="opt-circle"></div><span class="opt-text">Social / fun</span></div>
+      <div class="opt" onclick="pickOpt(this,5)"><div class="opt-circle"></div><span class="opt-text">Learning the sport</span></div>
+    </div>
+    <p class="error-msg" id="err-5">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(5)">Back</button>
+      <button class="btn-continue" onclick="goNext(5)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-6">
+    <span class="q-number">06 / 12</span>
+    <p class="q-label">How often would you ideally play?</p>
+    <div class="options" id="opts-6">
+      <div class="opt" onclick="pickOpt(this,6)"><div class="opt-circle"></div><span class="opt-text">3+ times per week</span></div>
+      <div class="opt" onclick="pickOpt(this,6)"><div class="opt-circle"></div><span class="opt-text">1–2 times per week</span></div>
+      <div class="opt" onclick="pickOpt(this,6)"><div class="opt-circle"></div><span class="opt-text">Occasionally</span></div>
+    </div>
+    <p class="error-msg" id="err-6">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(6)">Back</button>
+      <button class="btn-continue" onclick="goNext(6)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-7">
+    <span class="q-number">07 / 12</span>
+    <p class="q-label">Preferred weekday play time?</p>
+    <div class="options" id="opts-7">
+      <div class="opt" onclick="pickOpt(this,7)"><div class="opt-circle"></div><span class="opt-text">Morning</span></div>
+      <div class="opt" onclick="pickOpt(this,7)"><div class="opt-circle"></div><span class="opt-text">Midday</span></div>
+      <div class="opt" onclick="pickOpt(this,7)"><div class="opt-circle"></div><span class="opt-text">Evening</span></div>
+    </div>
+    <p class="error-msg" id="err-7">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(7)">Back</button>
+      <button class="btn-continue" onclick="goNext(7)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-8">
+    <span class="q-number">08 / 12</span>
+    <p class="q-label">Preferred weekend play time?</p>
+    <div class="options" id="opts-8">
+      <div class="opt" onclick="pickOpt(this,8)"><div class="opt-circle"></div><span class="opt-text">Morning</span></div>
+      <div class="opt" onclick="pickOpt(this,8)"><div class="opt-circle"></div><span class="opt-text">Midday</span></div>
+      <div class="opt" onclick="pickOpt(this,8)"><div class="opt-circle"></div><span class="opt-text">Afternoon</span></div>
+    </div>
+    <p class="error-msg" id="err-8">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(8)">Back</button>
+      <button class="btn-continue" onclick="goNext(8)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-9">
+    <span class="q-number">09 / 12</span>
+    <p class="q-label">Are you currently a member of Ox Ridge?</p>
+    <div class="options" id="opts-9">
+      <div class="opt" onclick="pickOpt(this,9)"><div class="opt-circle"></div><span class="opt-text">Yes</span></div>
+      <div class="opt" onclick="pickOpt(this,9)"><div class="opt-circle"></div><span class="opt-text">No</span></div>
+    </div>
+    <p class="error-msg" id="err-9">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(9)">Back</button>
+      <button class="btn-continue" onclick="goNext(9)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-10">
+    <span class="q-number">10 / 12</span>
+    <p class="q-label">Are you a member of another club nearby?</p>
+    <div class="options" id="opts-10">
+      <div class="opt" onclick="pickOpt(this,10,true)"><div class="opt-circle"></div><span class="opt-text">Yes</span></div>
+      <div class="opt" onclick="pickOpt(this,10,false)"><div class="opt-circle"></div><span class="opt-text">No</span></div>
+    </div>
+    <div class="conditional" id="cond-10">
+      <input class="text-input" type="text" id="ans-10b" placeholder="Which club?" style="margin-top:10px">
+    </div>
+    <p class="error-msg" id="err-10">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(10)">Back</button>
+      <button class="btn-continue" onclick="goNext(10)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-11">
+    <span class="q-number">11 / 12</span>
+    <p class="q-label">Do you expect to include family members?</p>
+    <div class="options" id="opts-11">
+      <div class="opt" onclick="pickOpt(this,11)"><div class="opt-circle"></div><span class="opt-text">Yes</span></div>
+      <div class="opt" onclick="pickOpt(this,11)"><div class="opt-circle"></div><span class="opt-text">No</span></div>
+    </div>
+    <p class="error-msg" id="err-11">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(11)">Back</button>
+      <button class="btn-continue" onclick="goNext(11)">Continue</button>
+    </div>
+  </div>
+
+  <div class="question-block" id="q-12">
+    <span class="q-number">12 / 12</span>
+    <p class="q-label">Which membership are you most interested in?</p>
+    <div class="options" id="opts-12">
+      <div class="opt" onclick="pickOpt(this,12)"><div class="opt-circle"></div><span class="opt-text">Ambassador Membership</span></div>
+      <div class="opt" onclick="pickOpt(this,12)"><div class="opt-circle"></div><span class="opt-text">Summer Membership</span></div>
+      <div class="opt" onclick="pickOpt(this,12)"><div class="opt-circle"></div><span class="opt-text">Discovery Pass</span></div>
+    </div>
+    <p class="error-msg" id="err-12">Please select an option.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack(12)">Back</button>
+      <button class="btn-continue" onclick="submitForm()">Submit Application</button>
+    </div>
+  </div>
+
+  <div class="thankyou" id="thankyou">
+    <div class="ty-icon">✦</div>
+    <h2 class="ty-title">Application Received</h2>
+    <p class="ty-body">Thank you for applying to Ox Ridge Padel. We've received your details and will be in touch directly as soon as enrollment opens.<br><br>Early registrants receive priority access and invitations to our founding group.</p>
+    <div class="ty-note">"We can't wait to welcome you on the courts this summer."<br><span style="font-size:13px;opacity:0.6">— The Ox Ridge Padel Team</span></div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe939f909f999b8cbe91868c979a999bd09d9193">[email&#160;protected]</a></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  var current = 1;
+  var total = 12;
+  var answers = {};
+
+  function updateProgress() {
+    var pct = ((current - 1) / total) * 100;
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-count').textContent = 'Question ' + current + ' of ' + total;
+  }
+
+  function showQuestion(n) {
+    for (var i = 1; i <= total; i++) {
+      var el = document.getElementById('q-' + i);
+      if (el) el.classList.remove('active');
+    }
+    var target = document.getElementById('q-' + n);
+    if (target) target.classList.add('active');
+    current = n;
+    updateProgress();
+    window.scrollTo(0, 0);
+  }
+
+  function pickOpt(el, qNum, showConditional) {
+    var opts = document.querySelectorAll('#opts-' + qNum + ' .opt');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].classList.remove('selected');
+    }
+    el.classList.add('selected');
+    answers['q' + qNum] = el.querySelector('.opt-text').textContent;
+    if (qNum === 10) {
+      var cond = document.getElementById('cond-10');
+      if (showConditional === true) {
+        cond.classList.add('show');
+      } else {
+        cond.classList.remove('show');
+        document.getElementById('ans-10b').value = '';
+      }
+    }
+    var err = document.getElementById('err-' + qNum);
+    if (err) err.classList.remove('show');
+  }
+
+  function goNext(qNum) {
+    if (qNum === 1) {
+      var val = document.getElementById('ans-1').value.trim();
+      if (!val) { document.getElementById('err-1').classList.add('show'); return; }
+      answers['q1'] = val;
+    } else if (qNum === 2) {
+      var val = document.getElementById('ans-2').value.trim();
+      if (!val || val.indexOf('@') === -1) { document.getElementById('err-2').classList.add('show'); return; }
+      answers['q2'] = val;
+    } else {
+      if (!answers['q' + qNum]) { document.getElementById('err-' + qNum).classList.add('show'); return; }
+    }
+    if (qNum < total) {
+      showQuestion(qNum + 1);
+    }
+  }
+
+  function goBack(qNum) {
+    if (qNum > 1) showQuestion(qNum - 1);
+  }
+
+  // Initialise EmailJS
+  emailjs.init('2cCC03UlIgYSyJofG');
+
+  function submitForm() {
+    if (!answers['q12']) {
+      document.getElementById('err-12').classList.add('show');
+      return;
+    }
+
+    var name = answers['q1'] || '';
+    var email = answers['q2'] || '';
+
+    var data = {
+      name: name,
+      email: email,
+      played_before: answers['q3'] || '',
+      level: answers['q4'] || '',
+      looking_for: answers['q5'] || '',
+      frequency: answers['q6'] || '',
+      weekday_time: answers['q7'] || '',
+      weekend_time: answers['q8'] || '',
+      ox_member: answers['q9'] || '',
+      other_club: answers['q10'] || '',
+      other_club_name: document.getElementById('ans-10b').value.trim(),
+      family: answers['q11'] || '',
+      membership: answers['q12'] || ''
+    };
+
+    // Send to FormSubmit (delivers to info@oxridgepadel.com)
+    fetch('https://formsubmit.co/ajax/info@oxridgepadel.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function(res) {
+      console.log('FormSubmit sent');
+    }).catch(function(err) {
+      console.log('FormSubmit error:', err);
+    });
+
+    // Send branded autoresponse to applicant via EmailJS
+    emailjs.send('service_md6zenh', 'template_17poehr', {
+      to_name: name,
+      to_email: email,
+      membership: answers['q12'] || ''
+    }).then(function() {
+      console.log('EmailJS autoresponse sent');
+    }).catch(function(err) {
+      console.log('EmailJS error:', err);
+    });
+
+    // Show thank you screen
+    document.getElementById('prog-fill').style.width = '100%';
+    document.getElementById('prog-count').textContent = 'Complete';
+    for (var i = 1; i <= total; i++) {
+      var el = document.getElementById('q-' + i);
+      if (el) el.style.display = 'none';
+    }
+    document.getElementById('thankyou').classList.add('show');
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('ans-1').addEventListener('keydow
