@@ -344,4 +344,10 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
     window.scrollTo(0,0);
   }
 
-  document.getElementById('ans-1')
+  document.getElementById('ans-1').addEventListener('keydown',function(e){if(e.key==='Enter')goNext(1);});
+  document.getElementById('ans-2').addEventListener('keydown',function(e){if(e.key==='Enter')goNext(2);});
+  updateProgress();
+})();
+</script>
+</body>
+</html>
