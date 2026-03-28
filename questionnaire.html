@@ -274,10 +274,10 @@ footer p { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; col
 </div>
 
 <footer>
-  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; info@oxridgepadel.com</p>
+  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="573e39313817382f253e333032273633323b7934383a">[email&#160;protected]</a></p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function() {
   emailjs.init('2cCC03UlIgYSyJofG');
 
@@ -403,6 +403,13 @@ footer p { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; col
       body: formData
     }).catch(function(err) { console.log('FormSubmit error:', err); });
 
+    // Send to Google Sheets
+    fetch('https://script.google.com/macros/s/AKfycbweqiTMBvGxp1F5A-z7p_30CbgoF4c0eftbOBSMGND4o6h2UCLto3I8gSPx56PKQfY/exec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function(err) { console.log('Sheets error:', err); });
+
     // Send autoresponse via EmailJS
     emailjs.send('service_md6zenh', 'template_t66ec8e', {
       to_name: name,
@@ -422,15 +429,4 @@ footer p { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; col
   }
 
   // Enter key on text inputs
-  document.getElementById('ans-1').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') goNext(1);
-  });
-  document.getElementById('ans-2').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') goNext(2);
-  });
-
-  updateProgress();
-})();
-</script>
-</body>
-</html>
+  document.getElementById('ans-1').addEventListener('keydown', 
