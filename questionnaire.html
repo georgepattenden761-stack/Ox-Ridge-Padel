@@ -210,6 +210,7 @@
     .form-container { padding: 20px 16px 60px; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -417,10 +418,10 @@
 </div>
 
 <footer>
-  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; manager@oxridge.com</p>
+  <p>Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820 &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe939f909f999b8cbe91868c979a999bd09d9193">[email&#160;protected]</a></p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   var current = 1;
   var total = 12;
   var answers = {};
@@ -484,14 +485,21 @@
     if (qNum > 1) showQuestion(qNum - 1);
   }
 
+  // Initialise EmailJS
+  emailjs.init('2cCC03UlIgYSyJofG');
+
   function submitForm() {
     if (!answers['q12']) {
       document.getElementById('err-12').classList.add('show');
       return;
     }
+
+    var name = answers['q1'] || '';
+    var email = answers['q2'] || '';
+
     var data = {
-      name: answers['q1'] || '',
-      email: answers['q2'] || '',
+      name: name,
+      email: email,
       played_before: answers['q3'] || '',
       level: answers['q4'] || '',
       looking_for: answers['q5'] || '',
@@ -504,15 +512,30 @@
       family: answers['q11'] || '',
       membership: answers['q12'] || ''
     };
-    fetch('https://formspree.io/f/xpqyvqae', {
+
+    // Send to FormSubmit (delivers to info@oxridgepadel.com)
+    fetch('https://formsubmit.co/ajax/info@oxridgepadel.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)
     }).then(function(res) {
-      console.log('Submitted successfully');
+      console.log('FormSubmit sent');
     }).catch(function(err) {
-      console.log('Submission error:', err);
+      console.log('FormSubmit error:', err);
     });
+
+    // Send branded autoresponse to applicant via EmailJS
+    emailjs.send('service_md6zenh', 'template_t66ec8e', {
+      to_name: name,
+      to_email: email,
+      membership: answers['q12'] || ''
+    }).then(function() {
+      console.log('EmailJS autoresponse sent');
+    }).catch(function(err) {
+      console.log('EmailJS error:', err);
+    });
+
+    // Show thank you screen
     document.getElementById('prog-fill').style.width = '100%';
     document.getElementById('prog-count').textContent = 'Complete';
     for (var i = 1; i <= total; i++) {
@@ -523,14 +546,4 @@
     window.scrollTo(0, 0);
   }
 
-  document.getElementById('ans-1').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') goNext(1);
-  });
-  document.getElementById('ans-2').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') goNext(2);
-  });
-
-  updateProgress();
-</script>
-</body>
-</html>
+  document.getElementById('ans-1').addEventListener('keydow
