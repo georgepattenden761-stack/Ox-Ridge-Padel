@@ -1,22 +1,3 @@
-bash
-
-python3 << 'EOF'
-import re
-with open('/mnt/user-data/outputs/questionnaire.html', 'r', encoding='utf-8') as f:
-    content = f.read()
-
-# Remove ALL cloudflare injections
-content = re.sub(r'<script[^>]*cfasync[^>]*>.*?</script>', '', content, flags=re.DOTALL)
-content = re.sub(r'<a[^>]*cdn-cgi[^>]*>.*?</a>', 'info@oxridgepadel.com', content, flags=re.DOTALL)
-content = re.sub(r'<script[^>]*cdn-cgi[^>]*></script>', '', content, flags=re.DOTALL)
-
-# Verify clean
-print("Cloudflare free:", 'cfasync' not in content and 'cdn-cgi' not in content)
-print(content)
-EOF
-Output
-
-Cloudflare free: True
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -364,5 +345,3 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
   }
 
   document.getElementById('ans-1')
-Done
-The code is clean and Cloudflare free. Now select all of it from the GitHub editor, delete it, and paste this complete clean version. Scroll up in this chat to the big c 
