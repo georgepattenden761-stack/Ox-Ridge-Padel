@@ -323,11 +323,6 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
       family:answers['q11']||'',membership:answers['q12']||''
     };
 
-    // Submit to Zapier via hidden form (maps individual fields to Google Sheet columns)
-    var zapForm = document.createElement('form');
-    zapForm.method = 'POST';
-    zapForm.action = 'https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/';
-    zapForm.target = '_blank';
     var fields = {
       name: name,
       email: email,
@@ -344,18 +339,13 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
       membership: data.membership,
       date_submitted: new Date().toLocaleDateString()
     };
-    Object.keys(fields).forEach(function(k){
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = k;
-      input.value = fields[k];
-      zapForm.appendChild(input);
-    });
-    document.body.appendChild(zapForm);
-    zapForm.submit();
-    document.body.removeChild(zapForm);
 
-    // Also send to FormSubmit for email notification
+    // Send to Zapier as background fetch
+    fetch('https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/',{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)
+    }).catch(function(e){console.log('Zapier error:',e);});
+
+    // Send to FormSubmit for email notification
     var fd=new FormData();
     Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
     fd.append('_subject','New Ox Ridge Padel Application - '+name);
@@ -367,6 +357,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
       .catch(function(e){console.log('EmailJS error:',e);});
 
     document.getElementById('prog-fill').style.width='100%';
+    ';
     document.getElementById('prog-count').textContent='Complete';
     for(var i=1;i<=total;i++){var el=document.getElementById('q-'+i);if(el)el.style.display='none';}
     document.getElementById('thankyou').classList.add('show');
