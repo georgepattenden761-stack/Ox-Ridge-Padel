@@ -323,20 +323,45 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
       family:answers['q11']||'',membership:answers['q12']||''
     };
 
+    // Submit to Zapier via hidden form (maps individual fields to Google Sheet columns)
+    var zapForm = document.createElement('form');
+    zapForm.method = 'POST';
+    zapForm.action = 'https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/';
+    zapForm.target = '_blank';
+    var fields = {
+      name: name,
+      email: email,
+      played_before: data.played_before,
+      level: data.level,
+      looking_for: data.looking_for,
+      frequency: data.frequency,
+      weekday_time: data.weekday_time,
+      weekend_time: data.weekend_time,
+      ox_member: data.ox_member,
+      other_club: data.other_club,
+      other_club_name: data.other_club_name,
+      family: data.family,
+      membership: data.membership,
+      date_submitted: new Date().toLocaleDateString()
+    };
+    Object.keys(fields).forEach(function(k){
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = fields[k];
+      zapForm.appendChild(input);
+    });
+    document.body.appendChild(zapForm);
+    zapForm.submit();
+    document.body.removeChild(zapForm);
+
+    // Also send to FormSubmit for email notification
     var fd=new FormData();
-    Object.keys(data).forEach(function(k){fd.append(k,data[k]);});
+    Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
     fd.append('_subject','New Ox Ridge Padel Application - '+name);
     fd.append('_captcha','false');
     fetch('https://formsubmit.co/info@oxridgepadel.com',{method:'POST',body:fd})
       .catch(function(e){console.log('FormSubmit error:',e);});
-
-    fetch('https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/',{
-      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
-    }).catch(function(e){console.log('Zapier error:',e);});
-
-    fetch('https://script.google.com/macros/s/AKfycbweqiTMBvGxp1F5A-z7p_30CbgoF4c0eftbOBSMGND4o6h2UCLto3I8gSPx56PKQfY/exec',{
-      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
-    }).catch(function(e){console.log('Sheets error:',e);});
 
     emailjs.send('service_md6zenh','template_t66ec8e',{to_name:name,to_email:email,membership:answers['q12']||''})
       .catch(function(e){console.log('EmailJS error:',e);});
