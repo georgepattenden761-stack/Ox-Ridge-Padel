@@ -339,3 +339,10 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
     document.getElementById('prog-fill').style.width='100%';
     document.getElementById('prog-count').textContent='Complete
+.addEventListener('keydown',function(e){if(e.key==='Enter')goNext(1);});
+  document.getElementById('ans-2').addEventListener('keydown',function(e){if(e.key==='Enter')goNext(2);});
+  updateProgress();
+})();
+</script>
+</body>
+</html>
