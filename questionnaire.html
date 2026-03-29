@@ -350,7 +350,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
     Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
     fd.append('_subject','New Ox Ridge Padel Application - '+name);
     fd.append('_captcha','false');
-    fetch('https://formsubmit.co/info@oxridgepadel.com',{method:'POST',body:fd})
+    fetch('https://formsubmit.co/info[at]oxridgepadel.com',{method:'POST',body:fd})
       .catch(function(e){console.log('FormSubmit error:',e);});
 
     emailjs.send('service_md6zenh','template_t66ec8e',{to_name:name,to_email:email,membership:answers['q12']||''})
