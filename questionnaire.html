@@ -81,10 +81,9 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 <div class="form-container">
   <div class="question-block active" id="q-1">
     <span class="q-number">01 / 12</span>
-    <p class="q-label">What is your name?</p>
-    <input class="text-input" type="text" id="ans-1-first" placeholder="First name" autocomplete="given-name" style="margin-bottom:16px;">
-    <input class="text-input" type="text" id="ans-1-last" placeholder="Last name" autocomplete="family-name">
-    <p class="error-msg" id="err-1">Please enter your first and last name.</p>
+    <p class="q-label">What is your full name?</p>
+    <input class="text-input" type="text" id="ans-1" placeholder="Your full name" autocomplete="name">
+    <p class="error-msg" id="err-1">Please enter your full name.</p>
     <div class="btn-row">
       <button class="btn-back" style="visibility:hidden">Back</button>
       <button class="btn-continue" id="btn-1">Continue</button>
@@ -298,12 +297,9 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
   function goNext(n){
     if(n===1){
-      var first=document.getElementById('ans-1-first').value.trim();
-      var last=document.getElementById('ans-1-last').value.trim();
-      if(!first){document.getElementById('err-1').classList.add('show');return;}
-      answers['q1-first']=first;
-      answers['q1-last']=last;
-      answers['q1']=last ? first+' '+last : first;
+      var v=document.getElementById('ans-1').value.trim();
+      if(!v){document.getElementById('err-1').classList.add('show');return;}
+      answers['q1']=v;
     }else if(n===2){
       var v=document.getElementById('ans-2').value.trim();
       if(!v||v.indexOf('@')===-1){document.getElementById('err-2').classList.add('show');return;}
@@ -316,9 +312,9 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
   function submitForm(){
     if(!answers['q12']){document.getElementById('err-12').classList.add('show');return;}
-    var firstName=answers['q1-first']||'',lastName=answers['q1-last']||'',name=answers['q1']||'',email=answers['q2']||'';
+    var name=answers["q1"]||"",email=answers["q2"]||"";
     var data={
-      first_name:firstName,last_name:lastName,name:name,email:email,
+      name:name,email:email,
       played_before:answers['q3']||'',level:answers['q4']||'',
       looking_for:answers['q5']||'',frequency:answers['q6']||'',
       weekday_time:answers['q7']||'',weekend_time:answers['q8']||'',
@@ -328,8 +324,6 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
     };
 
     var fields = {
-      first_name: firstName,
-      last_name: lastName,
       name: name,
       email: email,
       played_before: data.played_before,
