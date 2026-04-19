@@ -81,9 +81,10 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 <div class="form-container">
   <div class="question-block active" id="q-1">
     <span class="q-number">01 / 12</span>
-    <p class="q-label">What is your full name?</p>
-    <input class="text-input" type="text" id="ans-1" placeholder="Your full name" autocomplete="name">
-    <p class="error-msg" id="err-1">Please enter your full name.</p>
+    <p class="q-label">What is your name?</p>
+    <input class="text-input" type="text" id="ans-1-first" placeholder="First name" autocomplete="given-name" style="margin-bottom:16px;">
+    <input class="text-input" type="text" id="ans-1-last" placeholder="Last name" autocomplete="family-name">
+    <p class="error-msg" id="err-1">Please enter your first and last name.</p>
     <div class="btn-row">
       <button class="btn-back" style="visibility:hidden">Back</button>
       <button class="btn-continue" id="btn-1">Continue</button>
@@ -297,9 +298,12 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
   function goNext(n){
     if(n===1){
-      var v=document.getElementById('ans-1').value.trim();
-      if(!v){document.getElementById('err-1').classList.add('show');return;}
-      answers['q1']=v;
+      var first=document.getElementById('ans-1-first').value.trim();
+      var last=document.getElementById('ans-1-last').value.trim();
+      if(!first||!last){document.getElementById('err-1').classList.add('show');return;}
+      answers['q1-first']=first;
+      answers['q1-last']=last;
+      answers['q1']=first+' '+last;
     }else if(n===2){
       var v=document.getElementById('ans-2').value.trim();
       if(!v||v.indexOf('@')===-1){document.getElementById('err-2').classList.add('show');return;}
@@ -312,18 +316,20 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
   function submitForm(){
     if(!answers['q12']){document.getElementById('err-12').classList.add('show');return;}
-    var name=answers['q1']||'',email=answers['q2']||'';
+    var firstName=answers['q1-first']||'',lastName=answers['q1-last']||'',name=answers['q1']||'',email=answers['q2']||'';
     var data={
-      name:name,email:email,
+      first_name:firstName,last_name:lastName,name:name,email:email,
       played_before:answers['q3']||'',level:answers['q4']||'',
       looking_for:answers['q5']||'',frequency:answers['q6']||'',
       weekday_time:answers['q7']||'',weekend_time:answers['q8']||'',
-      ox_bridge_member:answers['q9']||'',other_club:answers['q10']||'',
+      ox_member:answers['q9']||'',other_club:answers['q10']||'',
       other_club_name:document.getElementById('ans-10b').value.trim(),
       family:answers['q11']||'',membership:answers['q12']||''
     };
 
     var fields = {
+      first_name: firstName,
+      last_name: lastName,
       name: name,
       email: email,
       played_before: data.played_before,
@@ -332,7 +338,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
       frequency: data.frequency,
       weekday_time: data.weekday_time,
       weekend_time: data.weekend_time,
-      ox_bridge_member: data.ox_bridge_member,
+      ox_member: data.ox_member,
       other_club: data.other_club,
       other_club_name: data.other_club_name,
       family: data.family,
@@ -342,7 +348,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
     // Send to Zapier as background fetch
     fetch('https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/',{
-      method:'POST',body:JSON.stringify(fields)
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)
     }).catch(function(e){console.log('Zapier error:',e);});
 
     // Send to FormSubmit for email notification
@@ -350,13 +356,14 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
     Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
     fd.append('_subject','New Ox Ridge Padel Application - '+name);
     fd.append('_captcha','false');
-    fetch('https://formsubmit.co/info[at]oxridgepadel.com',{method:'POST',body:fd})
+    fetch('https://formsubmit.co/info@oxridgepadel.com',{method:'POST',body:fd})
       .catch(function(e){console.log('FormSubmit error:',e);});
 
     emailjs.send('service_md6zenh','template_t66ec8e',{to_name:name,to_email:email,membership:answers['q12']||''})
       .catch(function(e){console.log('EmailJS error:',e);});
 
     document.getElementById('prog-fill').style.width='100%';
+    ';
     document.getElementById('prog-count').textContent='Complete';
     for(var i=1;i<=total;i++){var el=document.getElementById('q-'+i);if(el)el.style.display='none';}
     document.getElementById('thankyou').classList.add('show');
