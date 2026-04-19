@@ -342,7 +342,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
 
     // Send to Zapier as background fetch
     fetch('https://hooks.zapier.com/hooks/catch/27015427/un5wdj9/',{
-      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)
+      method:'POST',body:JSON.stringify(fields)
     }).catch(function(e){console.log('Zapier error:',e);});
 
     // Send to FormSubmit for email notification
