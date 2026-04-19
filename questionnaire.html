@@ -285,7 +285,7 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
   for(var i=1;i<=11;i++){
     (function(n){
       var b=document.getElementById('btn-'+n);
-      if(b)b.addEventListener('click',function(){goNext(n);});
+      if(b)b.addEventListener('click',function(e){e.preventDefault();goNext(n);});
     })(i);
   }
   for(var j=2;j<=12;j++){
@@ -300,10 +300,10 @@ footer p{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c8bc
     if(n===1){
       var first=document.getElementById('ans-1-first').value.trim();
       var last=document.getElementById('ans-1-last').value.trim();
-      if(!first||!last){document.getElementById('err-1').classList.add('show');return;}
+      if(!first){document.getElementById('err-1').classList.add('show');return;}
       answers['q1-first']=first;
       answers['q1-last']=last;
-      answers['q1']=first+' '+last;
+      answers['q1']=last ? first+' '+last : first;
     }else if(n===2){
       var v=document.getElementById('ans-2').value.trim();
       if(!v||v.indexOf('@')===-1){document.getElementById('err-2').classList.add('show');return;}
