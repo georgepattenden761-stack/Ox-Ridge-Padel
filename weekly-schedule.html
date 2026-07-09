@@ -1,0 +1,351 @@
+<!--
+  OX RIDGE PADEL — WEEKLY SCHEDULE TAB
+  Brand-matched to index.html (forest/cream/gold · Cormorant Garamond · Pinyon Script · Montserrat).
+  Standalone, self-contained section. Drop into the site as a page/tab.
+
+  ───────────────────────────────────────────────────────────────────
+  HOW STAFF UPDATE THE WEEK (no coding needed):
+  Scroll to the <script> block near the bottom and edit the SCHEDULE
+  array. Each time slot is one line-group; each day is either an
+  "open" court or a session object:  s("Title","category","level",pros)
+    • category: beginner | intermediate | advanced | womens | social | open
+    • level:    shown as text (e.g. "Beginner", "All levels", or "")
+    • pros:     true adds the "+ Pros" badge (Jake or Paulo present)
+  For a true CMS later, point the SCHEDULE array at your CMS/spreadsheet
+  feed — the grid rebuilds itself from whatever data it's given.
+
+  Replace SERVE_URL and INTEREST_URL below with the real links.
+  ───────────────────────────────────────────────────────────────────
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Schedule — Ox Ridge Padel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ── Brand tokens (from index.html) ── */
+    --forest:#1a3528;
+    --forest-deep:#0f2219;
+    --forest-mid:#224535;
+    --cream:#f0ead8;
+    --cream-dim:#c8bc9e;
+    --gold:#c9a84c;
+    --gold-light:#e2c97e;
+    --white:#faf7f0;
+
+    /* ── Category accents (accent line + faint wash), tuned for the dark ground ── */
+    --beg:#86c98f; --beg-w:rgba(134,201,143,.12);
+    --int:#e0a955; --int-w:rgba(224,169,85,.12);
+    --adv:#d9694a; --adv-w:rgba(217,105,74,.13);
+    --wom:#c98bb0; --wom-w:rgba(201,139,176,.12);
+    --soc:#7fa8c9; --soc-w:rgba(127,168,201,.12);
+    --opn:#6f7566; --opn-w:transparent;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--forest-deep);
+    color:var(--cream);
+    font-family:'Montserrat',sans-serif;font-weight:300;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  /* subtle grain, same as the site */
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,68px) clamp(16px,4vw,44px)}
+
+  /* ── Header ── */
+  .flourish{
+    font-family:'Pinyon Script',cursive;color:var(--gold-light);
+    font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1;margin-bottom:.1em;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(2.6rem,6.5vw,4.4rem);letter-spacing:.01em;line-height:1;
+    color:var(--white);margin-bottom:.28em;
+  }
+  .lede{
+    max-width:60ch;color:var(--cream-dim);font-weight:300;
+    font-size:clamp(1rem,1.5vw,1.1rem);line-height:1.65;
+  }
+  .rule{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:26px 0 4px;max-width:220px}
+
+  /* ── Rating strip ── */
+  .ratings{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 4px}
+  .rating{
+    font-size:12.5px;font-weight:400;letter-spacing:.02em;
+    display:flex;align-items:center;gap:8px;
+    border:1px solid rgba(240,234,216,.14);background:rgba(240,234,216,.03);
+    padding:7px 14px;border-radius:999px;
+  }
+  .rating b{color:var(--cream);font-weight:500}
+  .rating span{color:var(--cream-dim)}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+
+  /* ── Legend ── */
+  .legend{
+    margin:30px 0 6px;padding:22px 24px;
+    border:1px solid rgba(240,234,216,.12);background:rgba(240,234,216,.025);border-radius:4px;
+  }
+  .legend h2{
+    font-family:'Montserrat';font-weight:500;font-size:11px;
+    letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;
+  }
+  .keys{display:flex;flex-wrap:wrap;gap:11px 24px}
+  .key{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:300;color:var(--cream)}
+  .swatch{width:15px;height:15px;border-radius:3px;flex:none}
+  .prosbadge{
+    font-family:'Montserrat';font-size:10px;font-weight:600;letter-spacing:.06em;
+    color:var(--forest-deep);background:var(--gold);padding:2px 8px;border-radius:3px;
+  }
+  .keynote{margin-top:16px;font-size:13px;font-weight:300;color:var(--cream-dim);line-height:1.7}
+  .keynote b{color:var(--cream);font-weight:500}
+
+  /* ═══ DESKTOP GRID ═══ */
+  .board{margin-top:28px}
+  .board-scroll{overflow-x:auto;padding-bottom:8px}
+  .grid{display:grid;grid-template-columns:92px repeat(7,minmax(0,1fr));gap:6px;min-width:940px}
+  .col-head{
+    position:sticky;top:0;z-index:2;background:var(--forest-mid);
+    font-family:'Montserrat';font-weight:500;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;text-align:center;color:var(--gold-light);
+    padding:13px 6px;border-radius:3px;border-bottom:1px solid rgba(201,168,76,.4);
+  }
+  .col-head.time-head{color:var(--cream-dim)}
+  .time-cell{
+    font-size:10.5px;font-weight:500;letter-spacing:.05em;color:var(--cream-dim);
+    text-align:right;padding:11px 9px 0 0;line-height:1.4;
+  }
+  .cell{min-height:60px}
+  .sess{
+    height:100%;border-radius:4px;padding:10px 11px;
+    background:var(--wash);border-left:3px solid var(--acc);
+    display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--cream);
+    transition:transform .14s ease,background .14s ease;
+  }
+  a.sess:hover{transform:translateY(-2px);background:rgba(240,234,216,.07)}
+  a.sess:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .sess-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
+  .sess-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;line-height:1.1;color:var(--white)}
+  .sess-level{font-size:11px;font-weight:400;letter-spacing:.03em;color:var(--cream-dim)}
+  .sess .pros{
+    font-family:'Montserrat';font-size:9px;font-weight:600;letter-spacing:.05em;
+    color:var(--forest-deep);background:var(--gold);padding:2px 6px;border-radius:3px;flex:none;
+  }
+  .sess.open{background:transparent;border-left:1px dashed rgba(240,234,216,.16);border-radius:4px}
+  .sess.open .sess-title{font-family:'Montserrat';font-weight:300;font-size:12px;color:var(--cream-dim)}
+  a.sess.open:hover{background:rgba(240,234,216,.03)}
+
+  [data-cat="beginner"]    {--acc:var(--beg);--wash:var(--beg-w)}
+  [data-cat="intermediate"]{--acc:var(--int);--wash:var(--int-w)}
+  [data-cat="advanced"]    {--acc:var(--adv);--wash:var(--adv-w)}
+  [data-cat="womens"]      {--acc:var(--wom);--wash:var(--wom-w)}
+  [data-cat="social"]      {--acc:var(--soc);--wash:var(--soc-w)}
+  [data-cat="open"]        {--acc:var(--opn);--wash:var(--opn-w)}
+
+  /* ═══ MOBILE DAY VIEW ═══ */
+  .dayview{display:none}
+  .daytabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+  .daytab{
+    font-family:'Montserrat';font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid rgba(240,234,216,.16);background:transparent;color:var(--cream-dim);
+    padding:10px 16px;border-radius:999px;cursor:pointer;flex:none;transition:all .14s ease;
+  }
+  .daytab[aria-selected="true"]{background:var(--gold);color:var(--forest-deep);border-color:var(--gold)}
+  .daytab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .daylist{display:flex;flex-direction:column;gap:9px}
+  .row{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:stretch}
+  .row .time-cell{text-align:left;padding:13px 0 0 0}
+  .daylist .cell{min-height:0}
+  .daylist .sess{min-height:56px}
+
+  /* ── CTAs ── */
+  .cta-row{
+    display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+    margin-top:38px;padding-top:30px;border-top:1px solid rgba(240,234,216,.12);
+  }
+  .btn{
+    font-family:'Montserrat';font-weight:500;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+    text-decoration:none;cursor:pointer;padding:15px 30px;border-radius:3px;border:0;
+    display:inline-flex;align-items:center;gap:10px;transition:transform .14s ease,background .14s ease;
+  }
+  .btn-primary{background:var(--gold);color:var(--forest-deep)}
+  .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+  .btn-primary:focus-visible{outline:2px solid var(--cream);outline-offset:3px}
+  .softcta{color:var(--cream-dim);font-size:14px;font-weight:300}
+  .softcta a{color:var(--gold-light);font-weight:400;text-decoration:underline;text-underline-offset:3px}
+  .softcta a:hover{color:var(--gold)}
+  .footnote{margin-top:24px;font-size:12.5px;font-weight:300;color:var(--cream-dim);display:flex;gap:9px;line-height:1.6}
+  .footnote .mark{color:var(--gold);flex:none}
+
+  @media (max-width:860px){.gridview{display:none}.dayview{display:block;margin-top:26px}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}a.sess:hover,.btn:hover{transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <p class="flourish">This week at</p>
+  <h1>The Weekly Schedule</h1>
+  <p class="lede">Every clinic, open play and social — the full week at a glance, run by our pros. Sessions are grouped by level, so you always know you'll be matched with players around your rating.</p>
+  <div class="rule"></div>
+
+  <div class="ratings">
+    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>1.0–2.5</span></span>
+    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>2.5–4.0</span></span>
+    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>4.0+</span></span>
+  </div>
+
+  <section class="legend" aria-label="Schedule key">
+    <h2>Key — Session Types</h2>
+    <div class="keys">
+      <span class="key"><span class="swatch" style="background:var(--beg)"></span>Beginner</span>
+      <span class="key"><span class="swatch" style="background:var(--int)"></span>Intermediate</span>
+      <span class="key"><span class="swatch" style="background:var(--adv)"></span>Advanced</span>
+      <span class="key"><span class="swatch" style="background:var(--wom)"></span>Women's Clinic</span>
+      <span class="key"><span class="swatch" style="background:var(--soc)"></span>Social with Pros</span>
+      <span class="key"><span class="swatch" style="background:var(--opn)"></span>Open Booking</span>
+      <span class="key"><span class="prosbadge">+ Pros</span>Jake or Paulo running/joining</span>
+    </div>
+    <p class="keynote"><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level. &nbsp;·&nbsp; <b>Women's Clinic</b> — coached, all levels. &nbsp;·&nbsp; <b>Open Play + Pros</b> — level-matched court time with a pro guiding play. &nbsp;·&nbsp; <b>Social + Pros</b> — social matches with a pro on hand. &nbsp;·&nbsp; <b>Open</b> — unreserved, first-come court time.</p>
+  </section>
+
+  <div class="board gridview">
+    <div class="board-scroll"><div class="grid" id="grid" role="table" aria-label="Weekly schedule grid"></div></div>
+  </div>
+
+  <div class="dayview">
+    <div class="daytabs" id="daytabs" role="tablist" aria-label="Choose a day"></div>
+    <div class="daylist" id="daylist"></div>
+  </div>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" id="bookBtn" href="#">Book on Serve →</a>
+    <p class="softcta">Not ready to join? <a id="interestLink" href="#stay-in-the-loop">Get notified about clinics &amp; socials</a></p>
+  </div>
+
+  <p class="footnote"><span class="mark">✳</span> This program runs on one court, always leaving two courts free for regular booking.</p>
+
+</main>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   EDIT THE WEEK HERE
+   ══════════════════════════════════════════════════════════════════ */
+const SERVE_URL    = "https://example.serve.app/oxridgepadel"; // TODO: real Serve link
+const INTEREST_URL = "#stay-in-the-loop";                      // TODO: link to Stay-in-the-Loop tab
+
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+/* helper: s(title, category, level, pros)  →  a session   |   "open"  →  open court */
+const s = (title, cat, level="", pros=false) => ({title, cat, level, pros});
+
+const SCHEDULE = [
+  { time:"7:00 – 8:00 AM",  days:["open","open","open","open","open","open","open"] },
+  { time:"8:00 – 9:30 AM",  days:[
+      s("Morning Clinic","beginner","Beginner"),
+      s("Morning Clinic","intermediate","Intermediate"),
+      s("Morning Clinic","advanced","Advanced"),
+      s("Morning Clinic","beginner","Beginner"),
+      s("Morning Clinic","intermediate","Intermediate"),
+      s("Morning Clinic","intermediate","Intermediate",true),
+      s("Morning Clinic","beginner","Beginner",true) ] },
+  { time:"9:30 – 11:00 AM", days:[
+      s("Women's Clinic","womens","All levels"),
+      s("Women's Clinic","womens","All levels"),
+      s("Women's Clinic","womens","All levels"),
+      s("Women's Clinic","womens","All levels"),
+      s("Women's Clinic","womens","All levels"),
+      s("Open Play","advanced","Advanced",true),
+      s("Open Play","intermediate","Intermediate",true) ] },
+  { time:"10:30 AM – 12:00 PM", days:["open","open","open","open","open","open","open"] },
+  { time:"12:00 – 1:30 PM", days:[
+      s("Open Play","advanced","Advanced",true),
+      s("Open Play","beginner","Beginner",true),
+      s("Open Play","intermediate","Intermediate",true),
+      s("Open Play","advanced","Advanced",true),
+      s("Open Play","beginner","Beginner",true),
+      "open","open" ] },
+  { time:"1:30 – 3:00 PM",  days:["open","open","open","open","open","open","open"] },
+  { time:"3:00 – 4:30 PM",  days:[
+      s("Open Play","intermediate","Intermediate",true),
+      s("Open Play","advanced","Advanced",true),
+      s("Open Play","beginner","Beginner",true),
+      s("Open Play","intermediate","Intermediate",true),
+      s("Open Play","advanced","Advanced",true),
+      s("Open Play","beginner","Beginner",true),
+      s("Open Play","advanced","Advanced",true) ] },
+  { time:"4:30 – 6:00 PM",  days:[
+      "open","open","open","open","open",
+      s("Social","social","All levels",true),
+      s("Social","social","All levels",true) ] },
+  { time:"6:00 – 7:30 PM",  days:["open","open","open","open","open","open","open"] },
+  { time:"7:30 – 9:00 PM",  days:[
+      s("Social","social","Intermediate",true),
+      s("Social","social","Advanced",true),
+      s("Social","social","Beginner",true),
+      s("Social","social","Advanced",true),
+      s("Social","social","Intermediate",true),
+      "open","open" ] },
+];
+/* ═══════════════════ end editable section ═══════════════════ */
+
+function sessionMarkup(cell){
+  if(cell === "open"){
+    return `<a class="sess open" data-cat="open" href="${SERVE_URL}"><span class="sess-title">Open court</span></a>`;
+  }
+  const pros = cell.pros ? `<span class="pros">+ Pros</span>` : "";
+  const level = cell.level ? `<span class="sess-level">${cell.level}</span>` : "";
+  return `<a class="sess" data-cat="${cell.cat}" href="${SERVE_URL}"
+            aria-label="${cell.title}${cell.level? ', '+cell.level:''}${cell.pros? ', with a pro':''} — book on Serve">
+      <span class="sess-top"><span class="sess-title">${cell.title}</span>${pros}</span>${level}</a>`;
+}
+
+function buildGrid(){
+  const g = document.getElementById("grid");
+  let html = `<div class="col-head time-head" role="columnheader">Time</div>`;
+  DAYS.forEach(d => html += `<div class="col-head" role="columnheader">${d.slice(0,3)}</div>`);
+  SCHEDULE.forEach(slot=>{
+    html += `<div class="time-cell">${slot.time}</div>`;
+    slot.days.forEach(cell => html += `<div class="cell">${sessionMarkup(cell)}</div>`);
+  });
+  g.innerHTML = html;
+}
+
+function buildDayView(){
+  const tabs = document.getElementById("daytabs");
+  const list = document.getElementById("daylist");
+  const jsDay = new Date().getDay();
+  const startIdx = jsDay === 0 ? 6 : jsDay - 1;
+  DAYS.forEach((d,i)=>{
+    const t = document.createElement("button");
+    t.className="daytab";t.type="button";t.role="tab";t.textContent=d.slice(0,3);
+    t.setAttribute("aria-selected", i===startIdx ? "true":"false");
+    t.addEventListener("click",()=>selectDay(i));
+    tabs.appendChild(t);
+  });
+  selectDay(startIdx);
+  function selectDay(idx){
+    [...tabs.children].forEach((t,i)=>t.setAttribute("aria-selected", i===idx?"true":"false"));
+    let html="";
+    SCHEDULE.forEach(slot=>{
+      html += `<div class="row"><div class="time-cell">${slot.time}</div><div class="cell">${sessionMarkup(slot.days[idx])}</div></div>`;
+    });
+    list.innerHTML=html;
+  }
+}
+
+document.getElementById("bookBtn").href = SERVE_URL;
+document.getElementById("interestLink").href = INTEREST_URL;
+buildGrid();
+buildDayView();
+</script>
+</body>
+</html>
