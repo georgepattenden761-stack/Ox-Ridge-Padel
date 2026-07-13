@@ -612,6 +612,90 @@
     line-height: 1.7;
   }
 
+  /* ── STAY IN THE LOOP ── */
+  .stay-form {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .stay-form .form-input {
+    display: block;
+    width: 100%;
+    border: 1px solid rgba(201,168,76,0.25);
+    margin-bottom: 16px;
+  }
+
+  .stay-checkboxes {
+    margin-bottom: 16px;
+    padding: 18px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .stay-checkboxes-label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .stay-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--cream-dim);
+    font-weight: 300;
+    cursor: pointer;
+    padding: 6px 0;
+  }
+
+  .stay-checkbox input {
+    accent-color: var(--gold);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+  }
+
+  .stay-form .form-submit {
+    width: 100%;
+  }
+
+  .stay-error {
+    font-size: 10px;
+    color: #e07070;
+    margin-top: -4px;
+    margin-bottom: 16px;
+    display: none;
+    letter-spacing: 0.05em;
+  }
+
+  .stay-error.show { display: block; }
+
+  .stay-thankyou {
+    display: none;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .stay-thankyou.show {
+    display: block;
+    animation: fadeUp 0.6s ease;
+  }
+
+  .stay-thankyou p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+
   /* ── FOOTER ── */
   footer {
     padding: 60px 24px;
@@ -747,6 +831,7 @@
     <li><a href="#book-ratings">Book &amp; Ratings</a></li>
     <li><a href="#our-pros">Our Pros</a></li>
     <li><a href="#waitlist">Join</a></li>
+    <li><a href="#stay-in-the-loop">Stay in the Loop</a></li>
   </ul>
 </nav>
 
@@ -963,6 +1048,37 @@
   </div>
 </section>
 
+<!-- STAY IN THE LOOP -->
+<section class="waitlist" id="stay-in-the-loop">
+  <div class="waitlist-inner">
+    <span class="section-label reveal">Keep In Touch</span>
+    <h2 class="waitlist-heading reveal">Stay in the Loop</h2>
+    <p class="waitlist-sub reveal">Not ready to join yet? No problem — sign up to hear about the sessions and events that interest you.</p>
+
+    <form class="stay-form reveal" id="stayForm">
+      <input type="text" class="form-input" placeholder="Your name" id="stayName" required>
+      <input type="email" class="form-input" placeholder="Your email address" id="stayEmail" required>
+
+      <div class="stay-checkboxes">
+        <span class="stay-checkboxes-label">Interested in</span>
+        <label class="stay-checkbox"><input type="checkbox" value="Clinics"> Clinics</label>
+        <label class="stay-checkbox"><input type="checkbox" value="Social Plays"> Social Plays</label>
+        <label class="stay-checkbox"><input type="checkbox" value="Future Events"> Future Events</label>
+      </div>
+
+      <input type="text" class="form-input" placeholder="Phone (optional)" id="stayPhone">
+
+      <p class="stay-error" id="stayError">Please enter your name, a valid email, and select at least one interest.</p>
+
+      <button type="button" class="form-submit" onclick="submitStayInLoop()">Keep Me Posted</button>
+    </form>
+
+    <div class="stay-thankyou" id="stayThankyou">
+      <p>You're in — we'll be in touch when something matches your interests.</p>
+    </div>
+  </div>
+</section>
+
 <!-- LOCATION STRIP -->
 <div class="location-strip">
   <p>The Ox Ridge Riding &amp; Racquet Club &nbsp;·&nbsp; 512 Middlesex Rd, Darien, CT 06820</p>
@@ -1005,6 +1121,35 @@
   document.getElementById('emailInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handleSignup();
   });
+
+  // Stay in the Loop signup → FormSubmit
+  function submitStayInLoop() {
+    const name = document.getElementById('stayName').value.trim();
+    const email = document.getElementById('stayEmail').value.trim();
+    const phone = document.getElementById('stayPhone').value.trim();
+    const interests = Array.from(document.querySelectorAll('#stayForm .stay-checkbox input:checked')).map(cb => cb.value);
+    const errorEl = document.getElementById('stayError');
+
+    if (!name || !email || !email.includes('@') || interests.length === 0) {
+      errorEl.classList.add('show');
+      return;
+    }
+    errorEl.classList.remove('show');
+
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('email', email);
+    fd.append('phone', phone);
+    fd.append('interested_in', interests.join(', '));
+    fd.append('_subject', 'New Stay in the Loop signup - ' + name);
+    fd.append('_captcha', 'false');
+
+    fetch('https://formsubmit.co/info@oxridgepadel.com', { method: 'POST', body: fd })
+      .catch(e => console.log('FormSubmit error:', e));
+
+    document.getElementById('stayForm').style.display = 'none';
+    document.getElementById('stayThankyou').classList.add('show');
+  }
 
 </script>
 </body>
