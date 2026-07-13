@@ -330,6 +330,54 @@
     color: var(--cream-dim);
   }
 
+  /* ── OUR PROS ── */
+  .pros-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .pro-card {
+    background: var(--forest);
+    padding: 40px 36px;
+    text-align: center;
+    border-top: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .pro-card:hover { border-color: var(--gold); }
+
+  .pro-photo {
+    aspect-ratio: 1 / 1;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    opacity: 0.5;
+    margin-bottom: 24px;
+  }
+
+  .pro-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+
+  .pro-bio {
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--cream-dim);
+  }
+
   /* ── MEMBERSHIPS ── */
   .memberships {
     padding: 100px 24px;
@@ -625,13 +673,14 @@
     .nav-logo-full { display: none; }
     .nav-logo-short { display: inline; }
     .pillars-grid,
-    .membership-cards {
+    .membership-cards,
+    .pros-grid {
       grid-template-columns: 1fr;
     }
     .form-row { flex-direction: column; }
     .form-input { border-right: 1px solid rgba(201,168,76,0.25); border-bottom: none; }
     .form-submit { padding: 18px; }
-    .card { padding: 40px 24px; }
+    .card, .pro-card { padding: 40px 24px; }
   }
 
   /* ── NAV ── */
@@ -696,6 +745,7 @@
     <li><a href="#memberships">Memberships</a></li>
     <li><a href="weekly-schedule.html">Schedule</a></li>
     <li><a href="#book-ratings">Book &amp; Ratings</a></li>
+    <li><a href="#our-pros">Our Pros</a></li>
     <li><a href="#waitlist">Join</a></li>
   </ul>
 </nav>
@@ -781,6 +831,31 @@
 
   <div class="reveal" style="margin-top:40px">
     <a href="https://example.serve.app/oxridgepadel" class="btn-primary">Book a Court on Serve</a>
+  </div>
+</section>
+
+<!-- OUR PROS -->
+<section class="memberships" id="our-pros">
+  <div class="memberships-header">
+    <h2 class="memberships-heading reveal">Our Pros</h2>
+    <p class="intro-body reveal" style="max-width:520px;margin:20px auto 0;">Meet the coaches behind every clinic, social and session at Ox Ridge Padel.</p>
+  </div>
+
+  <div class="pros-grid">
+    <div class="pro-card reveal">
+      <div class="pro-photo">Photo coming soon</div>
+      <h3 class="pro-name">Jake</h3>
+      <p class="pro-bio">Bio, coaching style, specialties and typical sessions — coming soon.</p>
+    </div>
+    <div class="pro-card reveal">
+      <div class="pro-photo">Photo coming soon</div>
+      <h3 class="pro-name">Paulo</h3>
+      <p class="pro-bio">Bio, coaching style, specialties and typical sessions — coming soon.</p>
+    </div>
+  </div>
+
+  <div class="founding-note reveal" style="max-width:600px;margin:48px auto 0;text-align:center;">
+    <p>Interested in training with our pros? Check the <a href="weekly-schedule.html" style="color:var(--gold);text-decoration:none">weekly schedule</a> to see when Jake and Paulo are on court.</p>
   </div>
 </section>
 
