@@ -206,9 +206,9 @@
   <div class="rule"></div>
 
   <div class="ratings">
-    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>1.0–2.5</span></span>
-    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>2.5–4.0</span></span>
-    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>4.0+</span></span>
+    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>600–1200 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>1200–3000 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>3000–5000 GPI</span></span>
   </div>
 
   <section class="legend" aria-label="Schedule key">
@@ -239,7 +239,7 @@
     <p class="softcta">Not ready to join? <a id="interestLink" href="index.html#stay-in-the-loop">Get notified about clinics &amp; socials</a></p>
   </div>
 
-  <p class="footnote"><span class="mark">✳</span> This program runs on one court, always leaving two courts free for regular booking.</p>
+  <p class="footnote"><span class="mark">✳</span> This program takes place on one court, always leaving two courts available for regular bookings. Tournaments (Americano &amp; Up &amp; Down the River) are ticketed events — see event flyers for pricing and sign-up.</p>
 
 </main>
 
@@ -258,49 +258,45 @@ const s = (title, cat, level="", pros=false) => ({title, cat, level, pros});
 const SCHEDULE = [
   { time:"7:00 – 8:00 AM",  days:["open","open","open","open","open","open","open"] },
   { time:"8:00 – 9:30 AM",  days:[
-      s("Morning Clinic","beginner","Beginner"),
-      s("Morning Clinic","intermediate","Intermediate"),
-      s("Morning Clinic","advanced","Advanced"),
-      s("Morning Clinic","beginner","Beginner"),
-      s("Morning Clinic","intermediate","Intermediate"),
-      s("Morning Clinic","intermediate","Intermediate",true),
-      s("Morning Clinic","beginner","Beginner",true) ] },
+      s("Intermediate Clinic","intermediate"),
+      s("Beginner Clinic","beginner"),
+      s("Advanced Clinic","advanced"),
+      s("Beginner Clinic","beginner"),
+      "open",
+      s("Clinic","intermediate","Intermediate",true),
+      s("Clinic","beginner","Beginner",true) ] },
   { time:"9:30 – 11:00 AM", days:[
-      s("Women's Clinic","womens","All levels"),
-      s("Women's Clinic","womens","All levels"),
-      s("Women's Clinic","womens","All levels"),
-      s("Women's Clinic","womens","All levels"),
-      s("Women's Clinic","womens","All levels"),
+      "open",
+      s("Women's Clinic","womens","Advanced"),
+      s("Women's Clinic","womens","All Levels"),
+      s("Women's Clinic","womens","Intermediate"),
+      s("Social Ladies","womens","Advanced"),
       s("Open Play","advanced","Advanced",true),
       s("Open Play","intermediate","Intermediate",true) ] },
   { time:"10:30 AM – 12:00 PM", days:["open","open","open","open","open","open","open"] },
   { time:"12:00 – 1:30 PM", days:[
-      s("Open Play","advanced","Advanced",true),
-      s("Open Play","beginner","Beginner",true),
-      s("Open Play","intermediate","Intermediate",true),
-      s("Open Play","advanced","Advanced",true),
-      s("Open Play","beginner","Beginner",true),
-      "open","open" ] },
+      "open","open","open","open","open",
+      s("Americano Tournament","intermediate","Intermediate · 12:00–2:00 PM"),
+      s("Americano Tournament","advanced","Advanced · 12:00–2:00 PM") ] },
   { time:"1:30 – 3:00 PM",  days:["open","open","open","open","open","open","open"] },
-  { time:"3:00 – 4:30 PM",  days:[
-      s("Open Play","intermediate","Intermediate",true),
-      s("Open Play","advanced","Advanced",true),
-      s("Open Play","beginner","Beginner",true),
-      s("Open Play","intermediate","Intermediate",true),
-      s("Open Play","advanced","Advanced",true),
-      s("Open Play","beginner","Beginner",true),
-      s("Open Play","advanced","Advanced",true) ] },
+  { time:"2:00 – 3:30 PM",  days:[
+      "open","open","open","open",
+      s("Open Play","advanced","Advanced"),
+      "open","open" ] },
+  { time:"3:00 – 4:30 PM",  days:["open","open","open","open","open","open","open"] },
   { time:"4:30 – 6:00 PM",  days:[
       "open","open","open","open","open",
-      s("Social","social","All levels",true),
-      s("Social","social","All levels",true) ] },
-  { time:"6:00 – 7:30 PM",  days:["open","open","open","open","open","open","open"] },
-  { time:"7:30 – 9:00 PM",  days:[
+      s("Social","social","All Levels",true),
+      s("Social","social","All Levels",true) ] },
+  { time:"5:00 – 6:30 PM",  days:[
+      s("Intermediate Clinic","intermediate"),
+      "open","open","open","open","open","open" ] },
+  { time:"6:30 – 8:00 PM",  days:[
       s("Social","social","Intermediate",true),
-      s("Social","social","Advanced",true),
+      s("Up & Down the River","advanced","Intermediate & Advanced"),
       s("Social","social","Beginner",true),
       s("Social","social","Advanced",true),
-      s("Social","social","Intermediate",true),
+      s("Up & Down the River","advanced","Intermediate & Advanced"),
       "open","open" ] },
 ];
 /* ═══════════════════ end editable section ═══════════════════ */
