@@ -8,7 +8,7 @@
   Scroll to the <script> block near the bottom and edit the SCHEDULE
   array. Each time slot is one line-group; each day is either an
   "open" court or a session object:  s("Title","category","level",pros)
-    • category: beginner | intermediate | advanced | womens | social | open
+    • category: beginner | intermediate | advanced | womens | social | youth | open
     • level:    shown as text (e.g. "Beginner", "All levels", or "")
     • pros:     true adds the "+ Pros" badge (Jake or Paulo present)
   For a true CMS later, point the SCHEDULE array at your CMS/spreadsheet
@@ -43,6 +43,7 @@
     --adv:#d9694a; --adv-w:rgba(217,105,74,.13);
     --wom:#c98bb0; --wom-w:rgba(201,139,176,.12);
     --soc:#7fa8c9; --soc-w:rgba(127,168,201,.12);
+    --you:#d98f63; --you-w:rgba(217,143,99,.12);
     --opn:#6f7566; --opn-w:transparent;
   }
 
@@ -152,6 +153,7 @@
   [data-cat="advanced"]    {--acc:var(--adv);--wash:var(--adv-w)}
   [data-cat="womens"]      {--acc:var(--wom);--wash:var(--wom-w)}
   [data-cat="social"]      {--acc:var(--soc);--wash:var(--soc-w)}
+  [data-cat="youth"]       {--acc:var(--you);--wash:var(--you-w)}
   [data-cat="open"]        {--acc:var(--opn);--wash:var(--opn-w)}
 
   /* ═══ MOBILE DAY VIEW ═══ */
@@ -189,6 +191,27 @@
   .footnote{margin-top:24px;font-size:12.5px;font-weight:300;color:var(--cream-dim);display:flex;gap:9px;line-height:1.6}
   .footnote .mark{color:var(--gold);flex:none}
 
+  /* ── Session Types ── */
+  .types{margin-top:52px;padding-top:38px;border-top:1px solid rgba(240,234,216,.12)}
+  .types h2{
+    font-family:'Montserrat';font-weight:500;font-size:11px;
+    letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;
+  }
+  .types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  .type-card{
+    background:var(--forest);padding:30px 26px;border-top:2px solid transparent;
+    text-decoration:none;color:var(--cream);display:flex;flex-direction:column;gap:14px;
+    transition:border-color .3s ease,background .3s ease;
+  }
+  .type-card:hover{border-color:var(--gold);background:var(--forest-mid)}
+  .type-card:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .type-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .type-name{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:22px;color:var(--white)}
+  .type-teaser{font-size:12.5px;line-height:1.8;color:var(--cream-dim);font-weight:300;flex:1}
+  .type-link{font-family:'Montserrat';font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--gold-light)}
+  .type-card:hover .type-link{color:var(--gold)}
+  @media (max-width:860px){.types-grid{grid-template-columns:1fr}}
+
   @media (max-width:860px){.gridview{display:none}.dayview{display:block;margin-top:26px}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}a.sess:hover,.btn:hover{transform:none}}
 </style>
@@ -206,9 +229,9 @@
   <div class="rule"></div>
 
   <div class="ratings">
-    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>600–1200 GPI</span></span>
-    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>1200–3000 GPI</span></span>
-    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>3000–5000 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>1000–1999 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>2000–2700 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>2700+ GPI</span></span>
   </div>
 
   <section class="legend" aria-label="Schedule key">
@@ -218,12 +241,15 @@
       <span class="key"><span class="swatch" style="background:var(--int)"></span>Intermediate</span>
       <span class="key"><span class="swatch" style="background:var(--adv)"></span>Advanced</span>
       <span class="key"><span class="swatch" style="background:var(--wom)"></span>Women's Clinic</span>
+      <span class="key"><span class="swatch" style="background:var(--you)"></span>Youth Clinic</span>
       <span class="key"><span class="swatch" style="background:var(--soc)"></span>Social with Pros</span>
       <span class="key"><span class="swatch" style="background:var(--opn)"></span>Open Booking</span>
       <span class="key"><span class="prosbadge">+ Pros</span>Jake or Paulo running/joining</span>
     </div>
-    <p class="keynote"><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level. &nbsp;·&nbsp; <b>Women's Clinic</b> — coached, all levels. &nbsp;·&nbsp; <b>Open Play + Pros</b> — level-matched court time with a pro guiding play. &nbsp;·&nbsp; <b>Social + Pros</b> — social matches with a pro on hand. &nbsp;·&nbsp; <b>Open</b> — unreserved, first-come court time.</p>
+    <p class="keynote"><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level. &nbsp;·&nbsp; <b>Women's Clinic</b> — coached, all levels. &nbsp;·&nbsp; <b>Youth Clinic</b> — Kids (5–12) and Teen (13–16) instruction, grouped by age. &nbsp;·&nbsp; <b>Open Play + Pros</b> — level-matched court time with a pro guiding play. &nbsp;·&nbsp; <b>Social + Pros</b> — social matches with a pro on hand. &nbsp;·&nbsp; <b>Beat the Pro</b> — challenge a pro directly, limited spots. &nbsp;·&nbsp; <b>Open</b> — unreserved, first-come court time.</p>
   </section>
+
+  <p class="lede" style="margin:30px 0 6px;max-width:70ch">Our September schedule is live — clinics, socials, and open play running across the week, grouped by level so every session is a real match, not a mismatch. The program runs on one court, so two are always free for regular bookings. Rating bands: Beginner 1000–1999 · Intermediate 2000–2700 · Advanced 2700+. Full schedule below — every session books through the app.</p>
 
   <div class="board gridview">
     <div class="board-scroll"><div class="grid" id="grid" role="table" aria-label="Weekly schedule grid"></div></div>
@@ -233,6 +259,60 @@
     <div class="daytabs" id="daytabs" role="tablist" aria-label="Choose a day"></div>
     <div class="daylist" id="daylist"></div>
   </div>
+
+  <section class="types" aria-label="Session types">
+    <h2>Session Types</h2>
+    <div class="types-grid">
+      <a class="type-card" href="open-play.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Open Play</h3>
+          <span class="rating"><span class="dot" style="background:var(--gold)"></span><b>All Levels</b></span>
+        </div>
+        <p class="type-teaser">Matched games within your rating band — member-led, guests welcome.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+      <a class="type-card" href="social.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Social</h3>
+          <span class="rating"><span class="dot" style="background:var(--soc)"></span><b>All Levels</b></span>
+        </div>
+        <p class="type-teaser">A relaxed, level-mixed mixer with rotating partners all session long.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+      <a class="type-card" href="americano.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Americano</h3>
+          <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate &amp; Advanced</b></span>
+        </div>
+        <p class="type-teaser">New partner every round, points tracked individually — fast and social.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+      <a class="type-card" href="clinic.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Clinic</h3>
+          <span class="rating"><span class="dot" style="background:var(--gold)"></span><b>All Levels</b></span>
+        </div>
+        <p class="type-teaser">Coach-led drills by level, capped off with live-ball play.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+      <a class="type-card" href="up-and-down-the-river.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Up and Down the River</h3>
+          <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b></span>
+        </div>
+        <p class="type-teaser">Win and move up a court, lose and move down — high-energy doubles.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+      <a class="type-card" href="beat-the-pro.html">
+        <div class="type-card-top">
+          <h3 class="type-name">Beat the Pro</h3>
+          <span class="rating"><span class="dot" style="background:var(--gold)"></span><b>All Levels</b></span>
+        </div>
+        <p class="type-teaser">Grab a friend or come solo and take on one of our pros.</p>
+        <span class="type-link">Learn more →</span>
+      </a>
+    </div>
+  </section>
 
   <div class="cta-row">
     <a class="btn btn-primary" id="bookBtn" href="#">Book on Serve →</a>
@@ -247,7 +327,7 @@
 /* ══════════════════════════════════════════════════════════════════
    EDIT THE WEEK HERE
    ══════════════════════════════════════════════════════════════════ */
-const SERVE_URL    = "https://example.serve.app/oxridgepadel"; // TODO: real Serve link
+const SERVE_URL    = "https://apps.apple.com/gb/app/ox-ridge-padel/id6785562273";
 const INTEREST_URL = "index.html#stay-in-the-loop";
 
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -260,43 +340,58 @@ const SCHEDULE = [
   { time:"8:00 – 9:30 AM",  days:[
       s("Intermediate Clinic","intermediate"),
       s("Beginner Clinic","beginner"),
-      s("Advanced Clinic","advanced"),
-      s("Beginner Clinic","beginner"),
+      s("Intermediate Clinic","intermediate"),
+      s("Intermediate Clinic","intermediate"),
       "open",
       s("Clinic","intermediate","Intermediate",true),
       s("Clinic","beginner","Beginner",true) ] },
   { time:"9:30 – 11:00 AM", days:[
       "open",
       s("Women's Clinic","womens","Advanced"),
-      s("Women's Clinic","womens","All Levels"),
+      s("Women's Clinic","womens","Beginner"),
       s("Women's Clinic","womens","Intermediate"),
       s("Social Ladies","womens","Advanced"),
       s("Open Play","advanced","Advanced",true),
       s("Open Play","intermediate","Intermediate",true) ] },
-  { time:"10:30 AM – 12:00 PM", days:["open","open","open","open","open","open","open"] },
-  { time:"12:00 – 1:30 PM", days:[
+  { time:"10:30 AM – 12:00 PM", days:[
       "open","open","open","open","open",
+      s("Kids Clinic","youth","9–12 yrs · 11:00 AM–12:00 PM"),
+      s("Kids Clinic","youth","5–8 yrs · 11:00 AM–12:00 PM") ] },
+  { time:"12:00 – 1:30 PM", days:[
+      s("Beat the Pro","intermediate","Intermediate · 3 spots"),
+      s("Beat the Pro","advanced","Advanced · 3 spots"),
+      s("Beat the Pro","beginner","Beginner · 3 spots"),
+      s("Beginner Clinic","beginner"),
+      "open",
       s("Americano Tournament","intermediate","Intermediate · 12:00–2:00 PM"),
       s("Americano Tournament","advanced","Advanced · 12:00–2:00 PM") ] },
   { time:"1:30 – 3:00 PM",  days:["open","open","open","open","open","open","open"] },
   { time:"2:00 – 3:30 PM",  days:[
       "open","open","open","open",
-      s("Open Play","advanced","Advanced"),
+      s("Advanced Clinic","advanced"),
       "open","open" ] },
-  { time:"3:00 – 4:30 PM",  days:["open","open","open","open","open","open","open"] },
+  { time:"3:00 – 4:30 PM",  days:[
+      s("Kids Clinic","youth","5–8 yrs · 4:00–5:00 PM"),
+      s("Kids Clinic","youth","9–12 yrs · 4:00–5:00 PM"),
+      s("Kids Clinic","youth","5–8 yrs · 4:00–5:00 PM"),
+      s("Kids Clinic","youth","9–12 yrs · 4:00–5:00 PM"),
+      "open","open","open" ] },
   { time:"4:30 – 6:00 PM",  days:[
       "open","open","open","open","open",
       s("Social","social","All Levels",true),
       s("Social","social","All Levels",true) ] },
   { time:"5:00 – 6:30 PM",  days:[
       s("Intermediate Clinic","intermediate"),
-      "open","open","open","open","open","open" ] },
+      s("Teen Clinic","youth","13–16 yrs · 5:00–6:00 PM"),
+      "open",
+      s("Teen Clinic","youth","13–16 yrs · 5:00–6:00 PM"),
+      "open","open","open" ] },
   { time:"6:30 – 8:00 PM",  days:[
       s("Social","social","Intermediate",true),
-      s("Up & Down the River","advanced","Intermediate & Advanced"),
+      "open",
       s("Social","social","Beginner",true),
       s("Social","social","Advanced",true),
-      s("Up & Down the River","advanced","Intermediate & Advanced"),
+      s("Up & Down the River","advanced","Intermediate · 6:00–8:00 PM"),
       "open","open" ] },
 ];
 /* ═══════════════════ end editable section ═══════════════════ */
