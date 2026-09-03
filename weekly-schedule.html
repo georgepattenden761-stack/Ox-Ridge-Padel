@@ -104,14 +104,25 @@
     letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;
   }
   .keys{display:flex;flex-wrap:wrap;gap:11px 24px}
-  .key{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:300;color:var(--cream)}
+  .key{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:300;color:var(--cream)}
   .swatch{width:15px;height:15px;border-radius:3px;flex:none}
   .prosbadge{
     font-family:'Montserrat';font-size:10px;font-weight:600;letter-spacing:.06em;
     color:var(--forest-deep);background:var(--gold);padding:2px 8px;border-radius:3px;
   }
-  .keynote{margin-top:16px;font-size:13px;font-weight:300;color:var(--cream-dim);line-height:1.7}
-  .keynote b{color:var(--cream);font-weight:500}
+  .legend-body{display:flex;flex-wrap:wrap;gap:28px 40px;margin-top:16px;align-items:flex-start}
+  .legend-body .keys{margin:0;flex:0 0 auto;width:100%;max-width:230px;flex-direction:column;gap:14px}
+  .keynote-list{margin:0;flex:1 1 320px;min-width:280px;list-style:none;display:flex;flex-direction:column;gap:12px}
+  .keynote-list li{
+    font-size:15.5px;font-weight:300;color:var(--cream);line-height:1.55;
+    padding-left:20px;position:relative;
+  }
+  .keynote-list li::before{
+    content:'';position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;
+    background:var(--gold);
+  }
+  .keynote-list b{color:var(--white);font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.08em}
+  @media (max-width:640px){.legend-body .keys{max-width:none}}
 
   /* ═══ DESKTOP GRID ═══ */
   .board{margin-top:28px}
@@ -236,17 +247,27 @@
 
   <section class="legend" aria-label="Schedule key">
     <h2>Key — Session Types</h2>
-    <div class="keys">
-      <span class="key"><span class="swatch" style="background:var(--beg)"></span>Beginner</span>
-      <span class="key"><span class="swatch" style="background:var(--int)"></span>Intermediate</span>
-      <span class="key"><span class="swatch" style="background:var(--adv)"></span>Advanced</span>
-      <span class="key"><span class="swatch" style="background:var(--wom)"></span>Women's Clinic</span>
-      <span class="key"><span class="swatch" style="background:var(--you)"></span>Youth Clinic</span>
-      <span class="key"><span class="swatch" style="background:var(--soc)"></span>Social with Pros</span>
-      <span class="key"><span class="swatch" style="background:var(--opn)"></span>Open Booking</span>
-      <span class="key"><span class="prosbadge">+ Pros</span>Jake or Paulo running/joining</span>
+    <div class="legend-body">
+      <div class="keys">
+        <span class="key"><span class="swatch" style="background:var(--beg)"></span>Beginner</span>
+        <span class="key"><span class="swatch" style="background:var(--int)"></span>Intermediate</span>
+        <span class="key"><span class="swatch" style="background:var(--adv)"></span>Advanced</span>
+        <span class="key"><span class="swatch" style="background:var(--wom)"></span>Women's Clinic</span>
+        <span class="key"><span class="swatch" style="background:var(--you)"></span>Youth Clinic</span>
+        <span class="key"><span class="swatch" style="background:var(--soc)"></span>Social with Pros</span>
+        <span class="key"><span class="swatch" style="background:var(--opn)"></span>Open Booking</span>
+        <span class="key"><span class="prosbadge">+ Pros</span>Jake or Paulo running/joining</span>
+      </div>
+      <ul class="keynote-list">
+        <li><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level.</li>
+        <li><b>Women's Clinic</b> — coached, all levels.</li>
+        <li><b>Youth Clinic</b> — Kids (5–12) and Teen (13–16) instruction, grouped by age.</li>
+        <li><b>Open Play + Pros</b> — level-matched court time with a pro guiding play.</li>
+        <li><b>Social + Pros</b> — social matches with a pro on hand.</li>
+        <li><b>Beat the Pro</b> — challenge a pro directly, limited spots.</li>
+        <li><b>Open</b> — unreserved, first-come court time.</li>
+      </ul>
     </div>
-    <p class="keynote"><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level. &nbsp;·&nbsp; <b>Women's Clinic</b> — coached, all levels. &nbsp;·&nbsp; <b>Youth Clinic</b> — Kids (5–12) and Teen (13–16) instruction, grouped by age. &nbsp;·&nbsp; <b>Open Play + Pros</b> — level-matched court time with a pro guiding play. &nbsp;·&nbsp; <b>Social + Pros</b> — social matches with a pro on hand. &nbsp;·&nbsp; <b>Beat the Pro</b> — challenge a pro directly, limited spots. &nbsp;·&nbsp; <b>Open</b> — unreserved, first-come court time.</p>
   </section>
 
   <p class="lede" style="margin:30px 0 6px;max-width:70ch">Our September schedule is live — clinics, socials, and open play running across the week, grouped by level so every session is a real match, not a mismatch. The program runs on one court, so two are always free for regular bookings. Rating bands: Beginner 1000–1999 · Intermediate 2000–2700 · Advanced 2700+. Full schedule below — every session books through the app.</p>
@@ -319,7 +340,7 @@
     <p class="softcta">Not ready to join? <a id="interestLink" href="index.html#stay-in-the-loop">Get notified about clinics &amp; socials</a></p>
   </div>
 
-  <p class="footnote"><span class="mark">✳</span> This program takes place on one court, always leaving two courts available for regular bookings. Tournaments (Americano &amp; Up &amp; Down the River) are ticketed events — see event flyers for pricing and sign-up.</p>
+  <p class="footnote"><span class="mark">✳</span> This program typically runs on one court, leaving two available for regular bookings — except Monday and Thursday, 6:00–6:30 PM, when the Clinic finishing and Social starting overlap briefly and share two courts, still leaving one free. Tournaments (Americano &amp; Up &amp; Down the River) are ticketed events — see event flyers for pricing and sign-up.</p>
 
 </main>
 
@@ -386,12 +407,12 @@ const SCHEDULE = [
       "open",
       s("Teen Clinic","youth","13–16 yrs · 5:00–6:00 PM"),
       "open","open","open" ] },
-  { time:"6:30 – 8:00 PM",  days:[
+  { time:"6:00 – 7:30 PM",  days:[
       s("Social","social","Intermediate",true),
       "open",
       s("Social","social","Beginner",true),
       s("Social","social","Advanced",true),
-      s("Up & Down the River","advanced","Intermediate · 6:00–8:00 PM"),
+      s("Up & Down the River","advanced","Intermediate · 5:30–7:30 PM"),
       "open","open" ] },
 ];
 /* ═══════════════════ end editable section ═══════════════════ */
