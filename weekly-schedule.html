@@ -6,12 +6,14 @@
   ───────────────────────────────────────────────────────────────────
   HOW STAFF UPDATE THE WEEK (no coding needed):
   Scroll to the <script> block near the bottom and edit the SCHEDULE
-  array. Each time slot is one line-group; each day is either an
-  "open" court or a session object:  s("Title","category","level",pros)
-    • category: beginner | intermediate | advanced | womens | social | youth | open
-    • level:    shown as text (e.g. "Beginner", "All levels", or "")
-    • pros:     true adds the "+ Pros" badge (Jake or Paulo present)
-  For a true CMS later, point the SCHEDULE array at your CMS/spreadsheet
+  object. Each day is its own list of time blocks, in order, either
+  an open() court or a session: s("time","Title","category","level")
+    • category: begp | intm | intp | oxb | kids | allv | duo | open
+                (begp=Beginner+, intm=Intermediate, intp=Intermediate+,
+                 oxb=Ox Boxers, kids=Kids Clinic, allv=All Levels/Events,
+                 duo=dual-level session, open=unbooked court)
+    • level:    shown as text (e.g. "Intermediate+", "5–8 yrs", or "")
+  For a true CMS later, point the SCHEDULE object at your CMS/spreadsheet
   feed — the grid rebuilds itself from whatever data it's given.
 
   Replace SERVE_URL and INTEREST_URL below with the real links.
@@ -38,13 +40,13 @@
     --white:#faf7f0;
 
     /* ── Category accents (accent line + faint wash), tuned for the dark ground ── */
-    --beg:#86c98f; --beg-w:rgba(134,201,143,.12);
+    --beg:#86c98f; --beg-w:rgba(134,201,143,.12);     /* Beginner+ · light green */
     --int:#e0a955; --int-w:rgba(224,169,85,.12);
-    --adv:#d9694a; --adv-w:rgba(217,105,74,.13);
-    --wom:#c98bb0; --wom-w:rgba(201,139,176,.12);
-    --soc:#7fa8c9; --soc-w:rgba(127,168,201,.12);
-    --you:#d98f63; --you-w:rgba(217,143,99,.12);
-    --opn:#6f7566; --opn-w:transparent;
+    --soc:#7fa8c9; --soc-w:rgba(127,168,201,.12);      /* Intermediate · light blue */
+    --gold-light-w:rgba(226,201,126,.14);              /* Intermediate+ · light gold */
+    --oxb:#5bbab0; --oxb-w:rgba(91,186,176,.13);       /* Ox Boxers · teal */
+    --kids:#e3a177; --kids-w:rgba(227,161,119,.13);    /* Kids Clinic · peach */
+    --allv:#b49bd6; --allv-w:rgba(180,155,214,.13);    /* All Levels / Events · lavender */
   }
 
   *{margin:0;padding:0;box-sizing:border-box}
@@ -103,13 +105,9 @@
     font-family:'Montserrat';font-weight:500;font-size:11px;
     letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;
   }
-  .keys{display:flex;flex-wrap:wrap;gap:11px 24px}
+  .keys{list-style:none;display:flex;flex-direction:column;gap:12px}
   .key{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:300;color:var(--cream)}
   .swatch{width:15px;height:15px;border-radius:3px;flex:none}
-  .prosbadge{
-    font-family:'Montserrat';font-size:10px;font-weight:600;letter-spacing:.06em;
-    color:var(--forest-deep);background:var(--gold);padding:2px 8px;border-radius:3px;
-  }
   .legend-body{display:flex;flex-wrap:wrap;gap:28px 40px;margin-top:16px;align-items:flex-start}
   .legend-body .keys{margin:0;flex:0 0 auto;width:100%;max-width:230px;flex-direction:column;gap:14px}
   .keynote-list{margin:0;flex:1 1 320px;min-width:280px;list-style:none;display:flex;flex-direction:column;gap:12px}
@@ -127,45 +125,38 @@
   /* ═══ DESKTOP GRID ═══ */
   .board{margin-top:28px}
   .board-scroll{overflow-x:auto;padding-bottom:8px}
-  .grid{display:grid;grid-template-columns:92px repeat(7,minmax(0,1fr));gap:6px;min-width:940px}
+  .grid{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));gap:10px;min-width:1080px;align-items:start}
+  .daycol{display:flex;flex-direction:column;gap:8px}
   .col-head{
     position:sticky;top:0;z-index:2;background:var(--forest-mid);
     font-family:'Montserrat';font-weight:500;font-size:12px;letter-spacing:.14em;
     text-transform:uppercase;text-align:center;color:var(--gold-light);
     padding:13px 6px;border-radius:3px;border-bottom:1px solid rgba(201,168,76,.4);
   }
-  .col-head.time-head{color:var(--cream-dim)}
-  .time-cell{
-    font-size:10.5px;font-weight:500;letter-spacing:.05em;color:var(--cream-dim);
-    text-align:right;padding:11px 9px 0 0;line-height:1.4;
-  }
-  .cell{min-height:60px}
   .sess{
-    height:100%;border-radius:4px;padding:10px 11px;
+    border-radius:4px;padding:10px 11px;
     background:var(--wash);border-left:3px solid var(--acc);
     display:flex;flex-direction:column;gap:4px;text-decoration:none;color:var(--cream);
     transition:transform .14s ease,background .14s ease;
   }
   a.sess:hover{transform:translateY(-2px);background:rgba(240,234,216,.07)}
   a.sess:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .sess-time{font-family:'Montserrat';font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--gold-light)}
   .sess-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
   .sess-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;line-height:1.1;color:var(--white)}
   .sess-level{font-size:11px;font-weight:400;letter-spacing:.03em;color:var(--cream-dim)}
-  .sess .pros{
-    font-family:'Montserrat';font-size:9px;font-weight:600;letter-spacing:.05em;
-    color:var(--forest-deep);background:var(--gold);padding:2px 6px;border-radius:3px;flex:none;
-  }
-  .sess.open{background:transparent;border-left:1px dashed rgba(240,234,216,.16);border-radius:4px}
-  .sess.open .sess-title{font-family:'Montserrat';font-weight:300;font-size:12px;color:var(--cream-dim)}
-  a.sess.open:hover{background:rgba(240,234,216,.03)}
+  .sess.open{background:rgba(240,234,216,.05);border-left:3px solid var(--cream-dim)}
+  .sess.open .sess-time{color:var(--cream-dim)}
+  .sess.open .sess-title{font-family:'Montserrat';font-weight:400;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--cream-dim)}
+  a.sess.open:hover{background:rgba(240,234,216,.08)}
 
-  [data-cat="beginner"]    {--acc:var(--beg);--wash:var(--beg-w)}
-  [data-cat="intermediate"]{--acc:var(--int);--wash:var(--int-w)}
-  [data-cat="advanced"]    {--acc:var(--adv);--wash:var(--adv-w)}
-  [data-cat="womens"]      {--acc:var(--wom);--wash:var(--wom-w)}
-  [data-cat="social"]      {--acc:var(--soc);--wash:var(--soc-w)}
-  [data-cat="youth"]       {--acc:var(--you);--wash:var(--you-w)}
-  [data-cat="open"]        {--acc:var(--opn);--wash:var(--opn-w)}
+  [data-cat="begp"]{--acc:var(--beg);--wash:var(--beg-w)}
+  [data-cat="intm"]{--acc:var(--soc);--wash:var(--soc-w)}
+  [data-cat="intp"]{--acc:var(--gold-light);--wash:var(--gold-light-w)}
+  [data-cat="oxb"] {--acc:var(--oxb);--wash:var(--oxb-w)}
+  [data-cat="kids"]{--acc:var(--kids);--wash:var(--kids-w)}
+  [data-cat="allv"]{--acc:var(--allv);--wash:var(--allv-w)}
+  [data-cat="duo"] {--acc:var(--gold-light);--wash:linear-gradient(135deg,var(--soc-w),var(--gold-light-w))}
 
   /* ═══ MOBILE DAY VIEW ═══ */
   .dayview{display:none}
@@ -178,10 +169,7 @@
   .daytab[aria-selected="true"]{background:var(--gold);color:var(--forest-deep);border-color:var(--gold)}
   .daytab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .daylist{display:flex;flex-direction:column;gap:9px}
-  .row{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:stretch}
-  .row .time-cell{text-align:left;padding:13px 0 0 0}
-  .daylist .cell{min-height:0}
-  .daylist .sess{min-height:56px}
+  .daylist .sess{min-height:60px}
 
   /* ── CTAs ── */
   .cta-row{
@@ -240,37 +228,41 @@
   <div class="rule"></div>
 
   <div class="ratings">
-    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner</b><span>1000–1999 GPI</span></span>
-    <span class="rating"><span class="dot" style="background:var(--int)"></span><b>Intermediate</b><span>2000–2700 GPI</span></span>
-    <span class="rating"><span class="dot" style="background:var(--adv)"></span><b>Advanced</b><span>2700+ GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--cream-dim)"></span><b>Beginner</b><span>1000–1499 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--beg)"></span><b>Beginner+</b><span>1500–1999 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--soc)"></span><b>Intermediate</b><span>2000–2399 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--gold-light)"></span><b>Intermediate+</b><span>2400–2599 GPI</span></span>
+    <span class="rating"><span class="dot" style="background:var(--oxb)"></span><b>Ox Boxers</b><span>2600–3000 GPI</span></span>
   </div>
 
   <section class="legend" aria-label="Schedule key">
     <h2>Key — Session Types</h2>
     <div class="legend-body">
-      <div class="keys">
-        <span class="key"><span class="swatch" style="background:var(--beg)"></span>Beginner</span>
-        <span class="key"><span class="swatch" style="background:var(--int)"></span>Intermediate</span>
-        <span class="key"><span class="swatch" style="background:var(--adv)"></span>Advanced</span>
-        <span class="key"><span class="swatch" style="background:var(--wom)"></span>Women's Clinic</span>
-        <span class="key"><span class="swatch" style="background:var(--you)"></span>Youth Clinic</span>
-        <span class="key"><span class="swatch" style="background:var(--soc)"></span>Social with Pros</span>
-        <span class="key"><span class="swatch" style="background:var(--opn)"></span>Open Booking</span>
-        <span class="key"><span class="prosbadge">+ Pros</span>Jake or Paulo running/joining</span>
-      </div>
+      <ul class="keys">
+        <li class="key"><span class="swatch" style="background:var(--beg)"></span>Beginner+</li>
+        <li class="key"><span class="swatch" style="background:var(--soc)"></span>Intermediate</li>
+        <li class="key"><span class="swatch" style="background:var(--gold-light)"></span>Intermediate+</li>
+        <li class="key"><span class="swatch" style="background:var(--oxb)"></span>Ox Boxers</li>
+        <li class="key"><span class="swatch" style="background:var(--kids)"></span>Kids Clinic</li>
+        <li class="key"><span class="swatch" style="background:var(--allv)"></span>All Levels / Events</li>
+        <li class="key"><span class="swatch" style="background:var(--cream-dim)"></span>Open Booking</li>
+      </ul>
       <ul class="keynote-list">
-        <li><b>Morning Clinic / Clinic + Pros</b> — coached, structured drills, grouped by level.</li>
-        <li><b>Women's Clinic</b> — coached, all levels.</li>
-        <li><b>Youth Clinic</b> — Kids (5–12) and Teen (13–16) instruction, grouped by age.</li>
-        <li><b>Open Play + Pros</b> — level-matched court time with a pro guiding play.</li>
-        <li><b>Social + Pros</b> — social matches with a pro on hand.</li>
+        <li><b>Clinic</b> — coached, structured drills, grouped by level.</li>
+        <li><b>Women's Clinic</b> — coached clinic for women, grouped by level.</li>
+        <li><b>Group Clinic</b> — coached clinic for a full group at one level.</li>
         <li><b>Beat the Pro</b> — challenge a pro directly, limited spots.</li>
+        <li><b>Social</b> — relaxed, level-matched play with rotating partners.</li>
+        <li><b>Americano</b> — new partner every round, points tracked individually.</li>
+        <li><b>Kids Clinic</b> — coached instruction for ages 5–8.</li>
+        <li><b>New Members' Activation</b> — orientation for members just joining, all levels.</li>
+        <li><b>Events</b> — special ticketed sessions open to all levels.</li>
         <li><b>Open</b> — unreserved, first-come court time.</li>
       </ul>
     </div>
   </section>
 
-  <p class="lede" style="margin:30px 0 6px;max-width:70ch">Our September schedule is live — clinics, socials, and open play running across the week, grouped by level so every session is a real match, not a mismatch. The program runs on one court, so two are always free for regular bookings. Rating bands: Beginner 1000–1999 · Intermediate 2000–2700 · Advanced 2700+. Full schedule below — every session books through the app.</p>
+  <p class="lede" style="margin:30px 0 6px;max-width:70ch">Our October schedule is live — clinics, socials and open play running across the week, grouped by level so every session is a real match, not a mismatch. Rating bands: Beginner 1000–1499 · Beginner+ 1500–1999 · Intermediate 2000–2399 · Intermediate+ 2400–2599 · Ox Boxers 2600–3000. Full schedule below — every session books through the app.</p>
 
   <div class="board gridview">
     <div class="board-scroll"><div class="grid" id="grid" role="table" aria-label="Weekly schedule grid"></div></div>
@@ -340,7 +332,7 @@
     <p class="softcta">Not ready to join? <a id="interestLink" href="index.html#stay-in-the-loop">Get notified about clinics &amp; socials</a></p>
   </div>
 
-  <p class="footnote"><span class="mark">✳</span> This program typically runs on one court, leaving two available for regular bookings — except Monday and Thursday, 6:00–6:30 PM, when the Clinic finishing and Social starting overlap briefly and share two courts, still leaving one free. Tournaments (Americano &amp; Up &amp; Down the River) are ticketed events — see event flyers for pricing and sign-up.</p>
+  <p class="footnote"><span class="mark">✳</span> Clinics and Beat the Pro restart October 12. Clinics run as 6-week programs from October 12 to November 22. Drop-ins are accepted on application only, subject to space. Each program uses one court, always leaving two courts available for regular bookings. Americanos and Events are ticketed — see event flyers for pricing and sign-up.</p>
 
 </main>
 
@@ -353,88 +345,109 @@ const INTEREST_URL = "index.html#stay-in-the-loop";
 
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
-/* helper: s(title, category, level, pros)  →  a session   |   "open"  →  open court */
-const s = (title, cat, level="", pros=false) => ({title, cat, level, pros});
+/* helpers: s(time, title, category, level) → a session   |   open(time) → an open court */
+const s = (time, title, cat, level="") => ({time, title, cat, level, open:false});
+const open = (time) => ({time, title:"Open", cat:"open", level:"", open:true});
 
-const SCHEDULE = [
-  { time:"7:00 – 8:00 AM",  days:["open","open","open","open","open","open","open"] },
-  { time:"8:00 – 9:30 AM",  days:[
-      s("Intermediate Clinic","intermediate"),
-      s("Beginner Clinic","beginner"),
-      s("Intermediate Clinic","intermediate"),
-      s("Intermediate Clinic","intermediate"),
-      "open",
-      s("Clinic","intermediate","Intermediate",true),
-      s("Clinic","beginner","Beginner",true) ] },
-  { time:"9:30 – 11:00 AM", days:[
-      "open",
-      s("Women's Clinic","womens","Advanced"),
-      s("Women's Clinic","womens","Beginner"),
-      s("Women's Clinic","womens","Intermediate"),
-      s("Social Ladies","womens","Advanced"),
-      s("Open Play","advanced","Advanced",true),
-      s("Open Play","intermediate","Intermediate",true) ] },
-  { time:"10:30 AM – 12:00 PM", days:[
-      "open","open","open","open","open",
-      s("Kids Clinic","youth","9–12 yrs · 11:00 AM–12:00 PM"),
-      s("Kids Clinic","youth","5–8 yrs · 11:00 AM–12:00 PM") ] },
-  { time:"12:00 – 1:30 PM", days:[
-      s("Beat the Pro","intermediate","Intermediate · 3 spots"),
-      s("Beat the Pro","advanced","Advanced · 3 spots"),
-      s("Beat the Pro","beginner","Beginner · 3 spots"),
-      s("Beginner Clinic","beginner"),
-      "open",
-      s("Americano Tournament","intermediate","Intermediate · 12:00–2:00 PM"),
-      s("Americano Tournament","advanced","Advanced · 12:00–2:00 PM") ] },
-  { time:"1:30 – 3:00 PM",  days:["open","open","open","open","open","open","open"] },
-  { time:"2:00 – 3:30 PM",  days:[
-      "open","open","open","open",
-      s("Advanced Clinic","advanced"),
-      "open","open" ] },
-  { time:"3:00 – 4:30 PM",  days:[
-      s("Kids Clinic","youth","5–8 yrs · 4:00–5:00 PM"),
-      s("Kids Clinic","youth","9–12 yrs · 4:00–5:00 PM"),
-      s("Kids Clinic","youth","5–8 yrs · 4:00–5:00 PM"),
-      s("Kids Clinic","youth","9–12 yrs · 4:00–5:00 PM"),
-      "open","open","open" ] },
-  { time:"4:30 – 6:00 PM",  days:[
-      "open","open","open","open","open",
-      s("Social","social","All Levels",true),
-      s("Social","social","All Levels",true) ] },
-  { time:"5:00 – 6:30 PM",  days:[
-      s("Intermediate Clinic","intermediate"),
-      s("Teen Clinic","youth","13–16 yrs · 5:00–6:00 PM"),
-      "open",
-      s("Teen Clinic","youth","13–16 yrs · 5:00–6:00 PM"),
-      "open","open","open" ] },
-  { time:"6:00 – 7:30 PM",  days:[
-      s("Social","social","Intermediate",true),
-      "open",
-      s("Social","social","Beginner",true),
-      s("Social","social","Advanced",true),
-      s("Up & Down the River","advanced","Intermediate · 5:30–7:30 PM"),
-      "open","open" ] },
-];
+const SCHEDULE = {
+  Monday: [
+    open("7:00 – 8:00 AM"),
+    s("8:00 – 9:30 AM","Clinic","intm","Intermediate"),
+    s("9:30 – 11:00 AM","Clinic","begp","Beginner+"),
+    open("11:00 AM – 1:30 PM"),
+    s("1:30 – 3:00 PM","Beat the Pro","intp","Intermediate+"),
+    open("3:00 – 4:30 PM"),
+    s("4:30 – 6:00 PM","Social","intm","Intermediate"),
+    open("6:00 – 7:00 PM"),
+  ],
+  Tuesday: [
+    open("7:00 – 8:00 AM"),
+    s("8:00 – 9:30 AM","Clinic","begp","Beginner+"),
+    s("9:30 – 11:00 AM","Women's Clinic","intp","Intermediate+"),
+    open("11:00 AM – 12:00 PM"),
+    s("12:00 – 1:30 PM","Beat the Pro","intp","Intermediate+"),
+    open("1:30 – 3:00 PM"),
+    s("3:00 – 4:30 PM","Clinic","intm","Intermediate"),
+    s("4:30 – 6:00 PM","Social","oxb","Ox Boxers"),
+    open("6:00 – 7:00 PM"),
+  ],
+  Wednesday: [
+    s("7:00 – 8:30 AM","Social","intp","Intermediate+"),
+    s("8:30 – 10:00 AM","Clinic","intm","Intermediate"),
+    s("10:00 – 11:30 AM","Women's Clinic","begp","Beginner+"),
+    open("11:30 AM – 12:00 PM"),
+    s("12:00 – 1:30 PM","Beat the Pro","begp","Beginner+"),
+    open("1:30 – 3:00 PM"),
+    s("3:00 – 4:30 PM","Clinic","intp","Intermediate+"),
+    s("4:30 – 6:00 PM","Social","begp","Beginner+"),
+    open("6:00 – 7:00 PM"),
+  ],
+  Thursday: [
+    s("7:00 – 8:30 AM","Social","intm","Intermediate"),
+    s("8:30 – 10:00 AM","Clinic","intp","Intermediate+"),
+    s("10:00 – 11:30 AM","Women's Clinic","intm","Intermediate"),
+    open("11:30 AM – 12:00 PM"),
+    s("12:00 – 1:30 PM","Beat the Pro","intm","Intermediate"),
+    open("1:30 – 3:00 PM"),
+    s("3:00 – 4:30 PM","Clinic","begp","Beginner+"),
+    s("4:30 – 6:00 PM","Social","intp","Intermediate+"),
+    open("6:00 – 7:00 PM"),
+  ],
+  Friday: [
+    s("7:00 – 8:30 AM","Social","oxb","Ox Boxers"),
+    s("8:30 – 10:00 AM","Clinic","begp","Beginner+"),
+    s("10:00 – 11:30 AM","Clinic","intm","Intermediate"),
+    open("11:30 AM – 12:00 PM"),
+    s("12:00 – 1:30 PM","Beat the Pro","oxb","Ox Boxers"),
+    open("1:30 – 2:00 PM"),
+    s("2:00 – 3:30 PM","Clinic","intp","Intermediate+"),
+    open("3:30 – 4:30 PM"),
+    s("4:30 – 6:00 PM","Group Clinic","intm","Intermediate"),
+    open("6:00 – 7:00 PM"),
+  ],
+  Saturday: [
+    s("7:00 – 8:30 AM","Clinic","intp","Intermediate+"),
+    s("8:30 – 10:00 AM","Group Clinic","oxb","Ox Boxers"),
+    s("10:00 – 11:30 AM","Group Clinic","intm","Intermediate"),
+    open("11:30 AM – 12:00 PM"),
+    s("12:00 – 2:00 PM","Americano","duo","Intermediate / Intermediate+"),
+    open("2:00 – 3:00 PM"),
+    s("3:00 – 4:30 PM","New Members' Activation","allv","All Levels"),
+    open("4:30 – 7:00 PM"),
+  ],
+  Sunday: [
+    s("7:00 – 8:30 AM","Clinic","begp","Beginner+"),
+    s("8:30 – 10:00 AM","Social","begp","Beginner+"),
+    open("10:00 – 11:00 AM"),
+    s("11:00 AM – 12:00 PM","Kids Clinic","kids","5–8 yrs"),
+    s("12:00 – 1:30 PM","Group Clinic","begp","Beginner+"),
+    open("1:30 – 2:00 PM"),
+    s("2:00 – 5:00 PM","Events","allv","All Levels"),
+    open("5:00 – 7:00 PM"),
+  ],
+};
 /* ═══════════════════ end editable section ═══════════════════ */
 
-function sessionMarkup(cell){
-  if(cell === "open"){
-    return `<a class="sess open" data-cat="open" href="${SERVE_URL}"><span class="sess-title">Open court</span></a>`;
+function sessionMarkup(item){
+  if(item.open){
+    return `<a class="sess open" data-cat="open" href="${SERVE_URL}">
+      <span class="sess-time">${item.time}</span>
+      <span class="sess-title">Open</span></a>`;
   }
-  const pros = cell.pros ? `<span class="pros">+ Pros</span>` : "";
-  const level = cell.level ? `<span class="sess-level">${cell.level}</span>` : "";
-  return `<a class="sess" data-cat="${cell.cat}" href="${SERVE_URL}"
-            aria-label="${cell.title}${cell.level? ', '+cell.level:''}${cell.pros? ', with a pro':''} — book on Serve">
-      <span class="sess-top"><span class="sess-title">${cell.title}</span>${pros}</span>${level}</a>`;
+  const level = item.level ? `<span class="sess-level">${item.level}</span>` : "";
+  return `<a class="sess" data-cat="${item.cat}" href="${SERVE_URL}"
+            aria-label="${item.title}${item.level? ', '+item.level:''}, ${item.time} — book on Serve">
+      <span class="sess-time">${item.time}</span>
+      <span class="sess-top"><span class="sess-title">${item.title}</span></span>${level}</a>`;
 }
 
 function buildGrid(){
   const g = document.getElementById("grid");
-  let html = `<div class="col-head time-head" role="columnheader">Time</div>`;
-  DAYS.forEach(d => html += `<div class="col-head" role="columnheader">${d.slice(0,3)}</div>`);
-  SCHEDULE.forEach(slot=>{
-    html += `<div class="time-cell">${slot.time}</div>`;
-    slot.days.forEach(cell => html += `<div class="cell">${sessionMarkup(cell)}</div>`);
+  let html = "";
+  DAYS.forEach(d=>{
+    html += `<div class="daycol"><div class="col-head" role="columnheader">${d}</div>`;
+    SCHEDULE[d].forEach(item => html += `<div class="cell">${sessionMarkup(item)}</div>`);
+    html += `</div>`;
   });
   g.innerHTML = html;
 }
@@ -455,8 +468,8 @@ function buildDayView(){
   function selectDay(idx){
     [...tabs.children].forEach((t,i)=>t.setAttribute("aria-selected", i===idx?"true":"false"));
     let html="";
-    SCHEDULE.forEach(slot=>{
-      html += `<div class="row"><div class="time-cell">${slot.time}</div><div class="cell">${sessionMarkup(slot.days[idx])}</div></div>`;
+    SCHEDULE[DAYS[idx]].forEach(item=>{
+      html += `<div class="cell">${sessionMarkup(item)}</div>`;
     });
     list.innerHTML=html;
   }
